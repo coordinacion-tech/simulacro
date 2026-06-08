@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Yo Puedo — Simulacro ICFES Colyarima</title>
+<style>
+:root {
+  --azul:       #1a3a8f;
+  --azul-dark:  #112568;
+  --azul-light: #e8edf8;
+  --dorado:     #f5a623;
+  --dorado-dark:#d4881a;
+  --rojo:       #c0392b;
+  --verde:      #1a7a3c;
+  --verde-light:#e8f5ee;
+  --gris:       #f4f5f9;
+  --texto:      #1a1a2e;
+  --radio:      14px;
+  --sombra:     0 4px 20px rgba(26,58,143,.13);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--gris);
+  color: var(--texto);
+  min-height: 100vh;
+  overscroll-behavior: none;
+}
+
+/* ══════════════════ SPLASH ══════════════════ */
+#splash {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  background: #fff;
+  overflow: hidden;
+}
+
+#splash .portada-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top center;
+}
+
+#splash .portada-fallback {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, var(--azul) 0%, #1a5a9f 40%, #f5a623 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 30px;
+  text-align: center;
+}
+#splash .portada-fallback .escudo { font-size: 5rem; margin-bottom: 16px; }
+#splash .portada-fallback h1 { color: white; font-size: 2rem; line-height: 1.2; margin-bottom: 8px; }
+#splash .portada-fallback h1 span { color: var(--dorado); }
+#splash .portada-fallback p { color: rgba(255,255,255,.85); font-size: 1rem; margin-bottom: 6px; }
+
+#splash .overlay-bottom {
+  position: relative; z-index: 2;
+  width: 100%; padding: 24px 20px 36px;
+  background: linear-gradient(to top, rgba(10,20,70,.92) 60%, transparent);
+  text-align: center;
+}
+
+#splash .pillars {
+  display: flex; justify-content: center; gap: 18px;
+  margin-bottom: 22px; flex-wrap: wrap;
+}
+#splash .pillar {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+#splash .pillar .icono-circle {
+  width: 54px; height: 54px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; box-shadow: 0 3px 10px rgba(0,0,0,.3);
+}
+#splash .pillar .ic-saber   { background: var(--azul); }
+#splash .pillar .ic-leer    { background: var(--dorado); }
+#splash .pillar .ic-pensar  { background: var(--rojo); }
+#splash .pillar .ic-triunfar{ background: var(--verde); }
+#splash .pillar span { color: white; font-size: .72rem; font-weight: bold; letter-spacing: .05em; }
+
+#btn-ingresar {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--dorado);
+  color: var(--azul-dark);
+  font-size: 1.25rem; font-weight: 900;
+  padding: 16px 48px; border-radius: 50px;
+  border: none; cursor: pointer;
+  box-shadow: 0 6px 24px rgba(245,166,35,.5);
+  transition: transform .15s, box-shadow .15s;
+  letter-spacing: .06em;
+  margin-bottom: 14px;
+  width: 100%; max-width: 340px;
+  justify-content: center;
+}
+#btn-ingresar:hover { transform: scale(1.03); box-shadow: 0 8px 30px rgba(245,166,35,.6); }
+#btn-ingresar .arrow {
+  width: 36px; height: 36px; background: var(--azul-dark);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 1.1rem;
+}
+
+#splash .tagline {
+  color: rgba(255,255,255,.8); font-size: .8rem;
+  font-style: italic; margin-top: 4px;
+}
+#splash .tagline strong { color: var(--dorado); font-style: normal; }
+
+/* ══════════════════ APP PRINCIPAL ══════════════════ */
+#app { display: none; flex-direction: column; min-height: 100vh; }
+
+/* Header */
+.app-header {
+  background: linear-gradient(135deg, var(--azul-dark) 0%, var(--azul) 100%);
+  padding: 0 16px;
+  box-shadow: 0 2px 12px rgba(26,37,104,.3);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-top {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0 6px;
+}
+.header-top .logo-mini { font-size: 1.6rem; }
+.header-top h1 { color: white; font-size: .95rem; line-height: 1.3; }
+.header-top h1 span { color: var(--dorado); font-size: .78rem; font-weight: normal; display: block; }
+
+/* Nav tabs */
+.nav-tabs {
+  display: flex; gap: 0;
+  border-top: 1px solid rgba(255,255,255,.15);
+}
+.nav-tab {
+  flex: 1; text-align: center;
+  padding: 10px 4px 8px;
+  color: rgba(255,255,255,.6);
+  font-size: .75rem; font-weight: bold;
+  cursor: pointer; border-bottom: 3px solid transparent;
+  transition: all .2s; letter-spacing: .02em;
+}
+.nav-tab .tab-icon { font-size: 1.1rem; display: block; margin-bottom: 2px; }
+.nav-tab.activo { color: var(--dorado); border-bottom-color: var(--dorado); }
+.nav-tab:hover:not(.activo) { color: rgba(255,255,255,.9); }
+
+/* Contenido */
+.app-body { flex: 1; padding: 20px 16px 30px; max-width: 860px; margin: 0 auto; width: 100%; }
+
+/* Cards */
+.card {
+  background: white; border-radius: var(--radio);
+  padding: 22px; box-shadow: var(--sombra);
+  margin-bottom: 18px;
+}
+.card-title {
+  font-size: 1.05rem; font-weight: bold;
+  color: var(--azul); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* Formulario */
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block; font-weight: bold;
+  font-size: .87rem; color: #444; margin-bottom: 5px;
+}
+.form-group input, .form-group select {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid #dde1f0;
+  border-radius: 9px; font-size: .97rem;
+  background: #fafbff; color: var(--texto);
+  transition: border .2s, box-shadow .2s;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none; border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(26,58,143,.12);
+}
+
+.filtros-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width:480px){ .filtros-grid { grid-template-columns: 1fr; } }
+
+/* Botones */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 24px; border: none; border-radius: 10px;
+  font-size: .97rem; font-weight: bold;
+  cursor: pointer; transition: all .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--azul); color: white; }
+.btn-primary:hover { background: var(--azul-dark); }
+.btn-dorado { background: var(--dorado); color: var(--azul-dark); }
+.btn-dorado:hover { background: var(--dorado-dark); }
+.btn-verde { background: var(--verde); color: white; }
+.btn-verde:hover { background: #145530; }
+.btn-outline { background: transparent; color: var(--azul); border: 2px solid var(--azul); }
+.btn-outline:hover { background: var(--azul-light); }
+.btn-gris { background: #e0e3ee; color: #444; }
+.btn-gris:hover { background: #cdd0e0; }
+.btn-full { width: 100%; }
+.btn-rojo { background: var(--rojo); color: white; }
+
+/* Badges */
+.badge {
+  display: inline-block; padding: 3px 12px;
+  border-radius: 20px; font-size: .8rem; font-weight: bold;
+}
+.badge-azul { background: var(--azul-light); color: var(--azul); }
+.badge-dorado { background: #fff3d6; color: #8a5a00; }
+.badge-verde { background: var(--verde-light); color: var(--verde); }
+.badge-rojo { background: #fde8e8; color: var(--rojo); }
+
+/* Stats rápidas inicio */
+.stats-inicio {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-mini {
+  background: var(--azul-light); border-radius: 10px;
+  padding: 12px 8px; text-align: center;
+}
+.stat-mini .num { font-size: 1.7rem; font-weight: bold; color: var(--azul); }
+.stat-mini .lbl { font-size: .72rem; color: #666; margin-top: 2px; }
+
+/* ── QUIZ ── */
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px; flex-wrap: wrap; gap: 8px;
+}
+.progreso-wrap { margin-bottom: 18px; }
+.progreso-lbl { font-size: .82rem; color: #666; margin-bottom: 5px;
+  display: flex; justify-content: space-between; }
+.progreso-bar { height: 9px; background: #e0e3ee; border-radius: 5px; overflow: hidden; }
+.progreso-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--azul), var(--dorado));
+  border-radius: 5px; transition: width .4s;
+}
+
+.preg-enunciado {
+  font-size: 1rem; line-height: 1.7;
+  white-space: pre-wrap;
+  background: var(--gris); padding: 16px;
+  border-radius: 10px; border-left: 4px solid var(--azul);
+  margin-bottom: 20px;
+}
+
+.opciones { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.opcion {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 13px 16px; border-radius: 10px;
+  border: 2px solid #dde1f0; cursor: pointer;
+  transition: all .15s; font-size: .96rem; line-height: 1.5;
+  background: white;
+}
+.opcion:hover { border-color: var(--azul); background: var(--azul-light); }
+.opcion.sel { border-color: var(--azul); background: var(--azul-light); }
+.opcion.ok  { border-color: var(--verde); background: var(--verde-light); }
+.opcion.mal { border-color: var(--rojo); background: #fde8e8; }
+.opcion .letra {
+  min-width: 30px; height: 30px; border-radius: 50%;
+  background: #e0e3ee; display: flex; align-items: center; justify-content: center;
+  font-weight: bold; font-size: .88rem; flex-shrink: 0; transition: all .15s;
+}
+.opcion.sel .letra { background: var(--azul); color: white; }
+.opcion.ok  .letra { background: var(--verde); color: white; }
+.opcion.mal .letra { background: var(--rojo); color: white; }
+
+.retro-box {
+  background: #f0fff6; border: 1.5px solid #a8d5b5;
+  border-radius: 10px; padding: 14px 16px;
+  font-size: .9rem; line-height: 1.65;
+  margin-bottom: 16px; display: none;
+}
+.retro-box.show { display: block; }
+.retro-box .retro-titulo { color: var(--verde); font-weight: bold; margin-bottom: 5px; }
+
+.timer {
+  font-size: 1.25rem; font-weight: bold;
+  color: var(--azul); font-variant-numeric: tabular-nums;
+}
+.timer.urgente { color: var(--rojo); animation: pulso .7s infinite alternate; }
+@keyframes pulso { from{opacity:1} to{opacity:.4} }
+
+.nav-quiz { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── RESULTADOS ── */
+.resultado-cabeza {
+  text-align: center; padding: 10px 10px 20px;
+  background: linear-gradient(135deg, var(--azul-dark), var(--azul));
+  border-radius: 12px; color: white; margin-bottom: 18px;
+}
+.resultado-cabeza .emoji { font-size: 3.5rem; margin-bottom: 6px; }
+.resultado-cabeza .pct  { font-size: 4rem; font-weight: 900; color: var(--dorado); line-height: 1; }
+.resultado-cabeza .msg  { font-size: 1rem; opacity: .9; margin-top: 4px; }
+.resultado-cabeza .quien{ font-size: .88rem; opacity: .7; margin-top: 3px; }
+
+.stats-res { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 18px; }
+@media(max-width:400px){ .stats-res { grid-template-columns:1fr 1fr; } }
+.stat-res {
+  background: var(--gris); border-radius: 10px;
+  padding: 14px 8px; text-align: center;
+}
+.stat-res .n { font-size: 1.9rem; font-weight: bold; color: var(--azul); }
+.stat-res .l { font-size: .74rem; color: #666; margin-top: 3px; }
+
+.nivel-barra { margin-bottom: 18px; }
+.nivel-titulo { font-weight: bold; font-size: .88rem; color: #555; margin-bottom: 10px; }
+.nivel-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: .85rem; }
+.nivel-nombre { width: 140px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nivel-track { flex:1; height:13px; background:#dde1f0; border-radius:7px; overflow:hidden; }
+.nivel-fill { height:100%; border-radius:7px; transition: width .7s; }
+.nivel-pct { width: 38px; text-align: right; font-weight: bold; }
+
+.revision-item { border: 1px solid #e0e3ee; border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
+.revision-hdr {
+  padding: 10px 14px; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .9rem; background: #fafbff;
+}
+.revision-hdr:hover { background: var(--azul-light); }
+.revision-body { padding: 12px 14px; border-top: 1px solid #eee; display: none; font-size: .87rem; line-height: 1.65; }
+.revision-body.open { display: block; }
+.resp-ok  { color: var(--verde); font-weight: bold; }
+.resp-mal { color: var(--rojo); }
+
+/* ── HISTORIAL ── */
+.tabla-hist { width:100%; border-collapse: collapse; font-size: .85rem; }
+.tabla-hist th { background: var(--azul); color: white; padding: 9px 12px; text-align: left; }
+.tabla-hist td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+.tabla-hist tr:nth-child(even) td { background: #f9faff; }
+
+/* ── CARGAR ── */
+.drop-zone {
+  border: 2.5px dashed #b0b8d8; border-radius: 12px;
+  padding: 30px 20px; text-align: center;
+  background: var(--azul-light); cursor: pointer;
+  transition: border .2s;
+}
+.drop-zone:hover { border-color: var(--azul); }
+.drop-zone .icono { font-size: 2.5rem; margin-bottom: 8px; }
+
+.resumen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:480px){ .resumen-grid { grid-template-columns: 1fr; } }
+.resumen-bloque { background: var(--gris); border-radius: 10px; padding: 14px; }
+.resumen-bloque h4 { font-size: .82rem; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .04em; }
+.resumen-fila { display: flex; justify-content: space-between; font-size: .88rem; padding: 3px 0; border-bottom: 1px solid #e5e5e5; }
+.resumen-fila:last-child { border: none; }
+.resumen-fila strong { color: var(--azul); }
+
+/* Pilares decorativos */
+.pilares-deco {
+  display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap;
+}
+.pilar-chip {
+  flex: 1; min-width: 70px;
+  padding: 10px 6px; border-radius: 10px;
+  text-align: center; font-size: .75rem; font-weight: bold;
+  color: white; letter-spacing: .04em;
+}
+.pc-saber    { background: var(--azul); }
+.pc-leer     { background: var(--dorado); color: var(--azul-dark); }
+.pc-pensar   { background: var(--rojo); }
+.pc-triunfar { background: var(--verde); }
+.pilar-chip .pico { font-size: 1.4rem; display: block; margin-bottom: 3px; }
+
+.oculto { display: none !important; }
+.empty-state { text-align: center; padding: 36px 20px; color: #aaa; }
+.empty-state .ei { font-size: 3rem; margin-bottom: 10px; }
+
+footer {
+  text-align: center; padding: 18px; font-size: .75rem;
+  color: #aaa; border-top: 1px solid #e0e3ee;
+}
+footer strong { color: var(--azul); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ SPLASH ═══════════════════ -->
+<div id="splash">
+  <img src="portada.jpg" alt="Colyarima" class="portada-img"
+       onerror="this.style.display='none'; document.querySelector('.portada-fallback').style.display='flex'">
+  <div class="portada-fallback" style="display:none">
+    <div class="escudo">🏫</div>
+    <h1>Yo Puedo:<br><span>Saber, Leer, Pensar y Triunfar</span></h1>
+    <p><strong>Colegio Integrado Yarima</strong></p>
+    <p>Dios, Ciencia y Disciplina</p>
+    <p style="margin-top:8px;font-size:.85rem">Desde Chucurí para el mundo,<br>con sabor y con orgullo 🌿</p>
+  </div>
+
+  <div class="overlay-bottom">
+    <div class="pillars">
+      <div class="pillar">
+        <div class="icono-circle ic-saber">📘</div>
+        <span>SABER</span>
+      </div>
+      <div class="pillar">
+        <div class="icono-circle ic-leer">📖</div>
+        <span>LEER</span>
+      </div>
+      <div class="pillar">
+        <div class="icono-circle ic-pensar">💡</div>
+        <span>PENSAR</span>
+      </div>
+      <div class="pillar">
+        <div class="icono-circle ic-triunfar">🌟</div>
+        <span>TRIUNFAR</span>
+      </div>
+    </div>
+    <button id="btn-ingresar" onclick="entrarApp()">
+      INGRESAR
+      <span class="arrow">›</span>
+    </button>
+    <p class="tagline">Aprendemos con el <strong>corazón</strong>, transformamos nuestro <strong>territorio</strong></p>
+  </div>
+</div>
+
+<!-- ═══════════════════ APP ═══════════════════ -->
+<div id="app">
+
+  <header class="app-header">
+    <div class="header-top">
+      <span class="logo-mini">🏫</span>
+      <h1>Yo Puedo — Simulacro ICFES
+        <span>Colegio Integrado Yarima · Colyarima</span>
+      </h1>
+    </div>
+    <nav class="nav-tabs">
+      <div class="nav-tab activo" onclick="mostrarTab('inicio')" id="ntab-inicio">
+        <span class="tab-icon">🏠</span>Inicio
+      </div>
+      <div class="nav-tab" onclick="mostrarTab('historial')" id="ntab-historial">
+        <span class="tab-icon">📊</span>Historial
+      </div>
+      <div class="nav-tab" onclick="mostrarTab('cargar')" id="ntab-cargar">
+        <span class="tab-icon">📂</span>Preguntas
+      </div>
+    </nav>
+  </header>
+
+  <main class="app-body">
+
+    <!-- ── TAB INICIO ── -->
+    <div id="tab-inicio">
+
+      <!-- Pantalla configuración -->
+      <div id="pant-config">
+        <div class="pilares-deco">
+          <div class="pilar-chip pc-saber"><span class="pico">📘</span>SABER</div>
+          <div class="pilar-chip pc-leer"><span class="pico">📖</span>LEER</div>
+          <div class="pilar-chip pc-pensar"><span class="pico">💡</span>PENSAR</div>
+          <div class="pilar-chip pc-triunfar"><span class="pico">🌟</span>TRIUNFAR</div>
+        </div>
+
+        <div class="card" id="card-stats" style="display:none">
+          <div class="card-title">📈 Tu progreso</div>
+          <div class="stats-inicio" id="stats-contenido"></div>
+          <div id="ultimo-intento" style="font-size:.83rem;color:#888"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🎯 Configurar simulacro</div>
+          <div class="form-group">
+            <label>Tu nombre</label>
+            <input type="text" id="inp-nombre" placeholder="Escribe tu nombre completo" />
+          </div>
+          <div class="filtros-grid">
+            <div class="form-group">
+              <label>Grado</label>
+              <select id="sel-grado">
+                <option value="">— Todos —</option>
+                <option value="3">Grado 3°</option>
+                <option value="4">Grado 4°</option>
+                <option value="5">Grado 5°</option>
+                <option value="6">Grado 6°</option>
+                <option value="7">Grado 7°</option>
+                <option value="8">Grado 8°</option>
+                <option value="9">Grado 9°</option>
+                <option value="10">Grado 10°</option>
+                <option value="11">Grado 11°</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Asignatura</label>
+              <select id="sel-asig">
+                <option value="">— Todas —</option>
+                <option value="Lectura Crítica">Lectura Crítica</option>
+                <option value="Matemáticas">Matemáticas</option>
+                <option value="Ciencias Naturales">Ciencias Naturales</option>
+                <option value="Ciencias Sociales">Ciencias Sociales</option>
+                <option value="Inglés">Inglés</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>N° de preguntas</label>
+              <select id="sel-cant">
+                <option value="5">5 preguntas</option>
+                <option value="10" selected>10 preguntas</option>
+                <option value="15">15 preguntas</option>
+                <option value="0">Todas</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tiempo por pregunta</label>
+              <select id="sel-tiempo">
+                <option value="0">Sin límite</option>
+                <option value="60">1 minuto</option>
+                <option value="90" selected>1 min 30 seg</option>
+                <option value="120">2 minutos</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-full" onclick="iniciar()" style="margin-top:4px">
+            ▶ Comenzar simulacro
+          </button>
+        </div>
+      </div>
+
+      <!-- Pantalla quiz -->
+      <div id="pant-quiz" class="oculto">
+        <div class="card">
+          <div class="quiz-header">
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <span class="badge badge-azul" id="q-asig">—</span>
+              <span class="badge badge-dorado" id="q-grado">—</span>
+              <span class="badge badge-verde" id="q-comp">—</span>
+            </div>
+            <div class="timer" id="q-timer"></div>
+          </div>
+          <div class="progreso-wrap">
+            <div class="progreso-lbl">
+              <span id="q-proglbl">Pregunta 1 de 10</span>
+              <span id="q-progpct">0%</span>
+            </div>
+            <div class="progreso-bar">
+              <div class="progreso-fill" id="q-progfill" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="preg-enunciado" id="q-enunciado"></div>
+          <div class="opciones" id="q-opciones"></div>
+          <div class="retro-box" id="q-retro">
+            <div class="retro-titulo">💡 Retroalimentación</div>
+            <div id="q-retrotxt"></div>
+          </div>
+          <div class="nav-quiz">
+            <button class="btn btn-dorado" id="btn-verificar" onclick="verificar()">✔ Verificar respuesta</button>
+            <button class="btn btn-primary oculto" id="btn-siguiente" onclick="siguiente()">Siguiente ▶</button>
+            <button class="btn btn-gris" onclick="if(confirm('¿Salir del simulacro?')){detenerTimer();mostrarConfig()}">✕ Salir</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pantalla resultado -->
+      <div id="pant-resultado" class="oculto">
+        <div class="card">
+          <div class="resultado-cabeza">
+            <div class="emoji" id="r-emoji"></div>
+            <div class="pct"  id="r-pct"></div>
+            <div class="msg"  id="r-msg"></div>
+            <div class="quien" id="r-quien"></div>
+          </div>
+
+          <div class="stats-res">
+            <div class="stat-res"><div class="n" id="r-ok">0</div><div class="l">✅ Correctas</div></div>
+            <div class="stat-res"><div class="n" id="r-mal">0</div><div class="l">❌ Incorrectas</div></div>
+            <div class="stat-res"><div class="n" id="r-t">—</div><div class="l">⏱ Tiempo</div></div>
+          </div>
+
+          <div class="nivel-barra">
+            <div class="nivel-titulo">Desempeño por competencia</div>
+            <div id="r-niveles"></div>
+          </div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px">
+            <button class="btn btn-primary" onclick="mostrarConfig()">🏠 Nuevo simulacro</button>
+            <button class="btn btn-outline" onclick="toggleRevision()">🔍 Revisar respuestas</button>
+          </div>
+
+          <div class="oculto" id="r-revision"></div>
+        </div>
+      </div>
+
+    </div><!-- fin tab-inicio -->
+
+    <!-- ── TAB HISTORIAL ── -->
+    <div id="tab-historial" class="oculto">
+      <div class="card">
+        <div class="card-title">📊 Historial de simulacros</div>
+        <div id="hist-contenido"></div>
+        <div style="margin-top:14px">
+          <button class="btn btn-gris" style="font-size:.85rem"
+            onclick="if(confirm('¿Borrar todo el historial?')){borrarHistorial()}">
+            🗑 Borrar historial
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB CARGAR ── -->
+    <div id="tab-cargar" class="oculto">
+      <div class="card">
+        <div class="card-title">📂 Actualizar banco de preguntas</div>
+        <p style="font-size:.88rem;color:#666;margin-bottom:14px">
+          Carga el archivo <strong>preguntas.json</strong> para agregar o actualizar el banco.
+          El archivo debe tener el mismo formato JSON del banco original.
+        </p>
+        <label class="drop-zone" for="inp-file">
+          <div class="icono">📄</div>
+          <div style="font-weight:bold;color:var(--azul)">Seleccionar preguntas.json</div>
+          <div style="font-size:.82rem;color:#888;margin-top:4px">Haz clic aquí para buscar el archivo</div>
+        </label>
+        <input type="file" id="inp-file" accept=".json" style="display:none" onchange="cargarJSON(this)">
+        <div id="carga-msg" style="margin-top:12px;font-size:.9rem"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📋 Estado del banco actual</div>
+        <div id="banco-resumen"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <strong>Colegio Integrado Yarima</strong> · Dios, Ciencia y Disciplina ·
+    Simulacro ICFES 2026
+  </footer>
+</div><!-- fin #app -->
+
+<script>
+// ═══════════ ESTADO ═══════════
+let BANCO = [];
+let SES = {};
+
+// ═══════════ SPLASH ═══════════
+function entrarApp() {
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('app').style.flexDirection = 'column';
+}
+
+// Animación de entrada del splash
+window.addEventListener('load', () => {
+  cargarBancoInicial();
+  cargarStatsRapidas();
+});
+
+// ═══════════ BANCO ═══════════
+const PREGUNTAS_INICIALES = [
+  {"id":1,"grado":11,"asignatura":"Lectura Crítica","competencia":"literal","enunciado":"Lee el siguiente texto:\n\n\"El conocimiento no consiste en una serie de teorías autoconsistentes que tiende a converger en una perspectiva ideal; no consiste en un acercamiento gradual hacia la verdad. Por el contrario, el conocimiento es un océano, siempre en aumento, de alternativas incompatibles entre sí...\"\n(Feyerabend, Tratado contra el método)\n\n¿Cuál de las siguientes opciones describe mejor la relación entre el contenido del texto y el título de la obra de la que se extrajo?","opciones":{"A":"El texto introduce la propuesta de un nuevo método para la investigación científica, diferente del tradicional.","B":"El texto ataca diferentes ideas a propósito de qué es aquello en lo que consiste el llamado 'método científico'.","C":"El texto critica concepciones del conocimiento científico, el cual se ha concebido como resultado de un método.","D":"El texto argumenta a favor de la pluralidad de métodos disponibles para que cada ciencia alcance sus verdades."},"respuesta":"C","retroalimentacion":"El texto de Feyerabend cuestiona las concepciones tradicionales del conocimiento científico. El título 'Tratado contra el método' confirma esta orientación crítica. La opción A es incorrecta porque el texto no propone un método nuevo; la D es incorrecta porque el texto no defiende la pluralidad de métodos sino la pluralidad de enfoques del conocimiento."},
+  {"id":2,"grado":11,"asignatura":"Lectura Crítica","competencia":"crítico","enunciado":"Con base en el mismo texto de Feyerabend:\n\n\"El autor del texto aplica a la filosofía de la ciencia el principio del liberalismo, según el cual 'todos los ciudadanos son iguales ante la ley y ante el Estado'.\"\n\n¿Cuál de las siguientes afirmaciones refleja de manera más directa la influencia de las ideas liberales?","opciones":{"A":"La tarea del científico no ha de ser por más tiempo la glorificación de dios.","B":"Toda teoría particular, todo cuento de hadas, todo mito, forman parte del conocimiento.","C":"Hacer de la causa más débil la causa más fuerte, por ello en apoyar el movimiento de conjunto.","D":"El conocimiento no consiste en una serie de teorías autoconsistentes que tiende a converger en una perspectiva ideal."},"respuesta":"B","retroalimentacion":"El principio liberal establece que todos son iguales ante la ley. Feyerabend aplica esto al conocimiento al afirmar que toda teoría, cuento de hadas o mito tiene igual valor epistemológico. La opción B refleja directamente esa igualdad radical entre formas de conocimiento."},
+  {"id":3,"grado":11,"asignatura":"Lectura Crítica","competencia":"inferencial","enunciado":"Lee el siguiente texto:\n\n\"A mucha gente le gusta ver en los cuadros lo que también le gustaría ver en la realidad... Pero esta inclinación a los temas bonitos y atractivos puede convertirse en nociva si nos conduce a rechazar obras que representan asuntos menos agradables...\"\n(Gombrich, La historia del arte)\n\nEn el texto, el autor hace referencia a Rubens para mostrar que:","opciones":{"A":"A todos nos atrae lo bello y por fortuna el arte lo recoge en la pintura.","B":"El público siempre exige que el artista refleje la realidad en los cuadros.","C":"Algunos artistas plasman en sus obras lo que nos gusta ver en la realidad.","D":"La inclinación en el arte por los temas bonitos y atractivos es bastante nociva."},"respuesta":"C","retroalimentacion":"El autor menciona a Rubens para ilustrar que algunos artistas representan en sus obras aquello que el público desea ver en la realidad (lo bello, lo agradable). Esta referencia sirve de contraste con Durero, quien representó temas menos atractivos pero igual de valiosos."},
+  {"id":4,"grado":11,"asignatura":"Lectura Crítica","competencia":"crítico","enunciado":"Lee el siguiente texto:\n\n\"A mucha gente le gusta ver en los cuadros lo que también le gustaría ver en la realidad. Todos preferimos un rostro hermoso o un paisaje pintoresco a una figura desnuda o a un paisaje lúgubre... Pero esta inclinación a los temas bonitos y atractivos puede convertirse en nociva si nos conduce a rechazar obras que representan asuntos menos agradables. Rubens pintó a su hijo pequeño: lo hizo porque era un niño adorable y porque estaba orgulloso de él. Los golfillos del pintor español Murillo tienen también gran encanto...\"\n(Gombrich, La historia del arte)\n\n¿Cuál de los siguientes enunciados expresa un juicio de valor presente en el texto?","opciones":{"A":"Mientras Rubens dibujó la juventud, Durero dibujó la vejez.","B":"Los golfillos del pintor español Murillo tienen gran encanto.","C":"Rubens estaba orgulloso de su hijo y deseaba que lo admiráramos.","D":"Para el público, la hermosura de un cuadro reside en la belleza de su tema."},"respuesta":"B","retroalimentacion":"Un juicio de valor es una apreciación subjetiva que no puede verificarse como verdadera o falsa. Afirmar que los golfillos de Murillo 'poseen gran encanto' es una valoración estética del autor, no un hecho descriptivo. Las demás opciones son afirmaciones descriptivas (hechos relatados en el texto)."},
+  {"id":5,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"Un granjero tiene 2.000 metros de cerca y quiere bordear un terreno rectangular que limita con un río. Si no cerca el lado que está a lo largo del río, la mayor área que puede cercar es de:","opciones":{"A":"500 m²","B":"2.000.000 m²","C":"50.000 m²","D":"500.000 m²"},"respuesta":"D","retroalimentacion":"Sea x el ancho (dos lados) e y la longitud: 2x + y = 2000, entonces y = 2000 − 2x. Área: A = x(2000−2x). Derivando e igualando a cero: x = 500 m, y = 1000 m. Área máxima = 500 × 1000 = 500.000 m²."},
+  {"id":6,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"Si el precio de un artículo aumenta un 20% y luego disminuye un 20%, el precio final es:","opciones":{"A":"Mayor que el inicial","B":"Igual al inicial","C":"Menor que el inicial","D":"El doble del inicial"},"respuesta":"C","retroalimentacion":"Si el precio inicial es $100: aumento del 20% → $120. Disminución del 20% sobre $120 → $96. Como $96 < $100, el precio final es MENOR. El error común es pensar que los porcentajes se cancelan, pero el 20% se aplica sobre bases diferentes."},
+  {"id":7,"grado":11,"asignatura":"Matemáticas","competencia":"conceptual","enunciado":"Los lados de un rectángulo miden (x + 3) y (5x + 1). Si su perímetro es 152, el lado mayor mide:","opciones":{"A":"12","B":"61","C":"15","D":"71"},"respuesta":"B","retroalimentacion":"Perímetro = 2(x+3) + 2(5x+1) = 152. Desarrollando: 12x + 8 = 152, entonces x = 12. Los lados son: 12+3=15 y 5(12)+1=61. El lado mayor es 61."},
+  {"id":8,"grado":11,"asignatura":"Ciencias Naturales","competencia":"explicación de fenómenos","enunciado":"Si un país reduce sus emisiones industriales, pero aumenta su deforestación, ¿qué efecto es más probable en el ciclo del carbono?","opciones":{"A":"Disminución total de CO₂ atmosférico por reducción de emisiones.","B":"No hay cambio porque los árboles no participan en el ciclo del carbono.","C":"Reducción del efecto invernadero drásticamente.","D":"Aumento neto de CO₂ por menor captura vegetal."},"respuesta":"D","retroalimentacion":"Aunque se reduzcan emisiones industriales, la deforestación elimina sumideros de carbono (los árboles absorben CO₂). El efecto neto es un aumento de CO₂ atmosférico porque se pierde la capacidad de captura vegetal. El ciclo del carbono depende tanto de emisiones como de fijación biológica."},
+  {"id":9,"grado":11,"asignatura":"Ciencias Naturales","competencia":"indagación","enunciado":"Un observador afirma: 'Como la temperatura tuvo descensos en algunos años, el calentamiento global no existe'. Esta declaración es:","opciones":{"A":"Válida, porque un descenso invalida toda tendencia.","B":"Válida, porque el clima depende solo de años individuales.","C":"Correcta, porque las fluctuaciones eliminan las tendencias.","D":"Incorrecta, porque la tendencia se evalúa a largo plazo."},"respuesta":"D","retroalimentacion":"La existencia de descensos puntuales en años individuales no invalida una tendencia a largo plazo. El clima se analiza en períodos de 30 años o más (definición de la OMM). Usar datos de un año para refutar una tendencia de más de 140 años es un error metodológico conocido como 'cherry picking' de datos."},
+  {"id":10,"grado":11,"asignatura":"Ciencias Naturales","competencia":"uso del conocimiento científico","enunciado":"En una comunidad agrícola cercana a un lago se detecta eutrofización asociada al arrastre de fertilizantes nitrogenados. Las autoridades buscan una estrategia que reduzca el impacto ambiental sin afectar la productividad agrícola. ¿Cuál alternativa es más adecuada?","opciones":{"A":"Establecer franjas de vegetación entre los cultivos y el lago para disminuir el arrastre de nutrientes.","B":"Incrementar la dosis de fertilizante para compensar la pérdida de nutrientes del suelo.","C":"Extraer parte del agua del lago para reducir la concentración de algas.","D":"Aplicar fertilizantes en menor frecuencia pero manteniendo la misma cantidad total anual."},"respuesta":"A","retroalimentacion":"Las franjas de vegetación (buffer strips) entre cultivos y cuerpos de agua son la medida más eficaz y sostenible. La vegetación absorbe y filtra los nutrientes antes de que lleguen al lago, sin reducir significativamente la productividad agrícola."},
+  {"id":11,"grado":11,"asignatura":"Ciencias Sociales","competencia":"interpretación","enunciado":"Lee el siguiente texto:\n\n\"La Constitución de 1991 consagró la diversidad étnica y cultural como principio fundamental, reconoció la jurisdicción especial indígena y garantizó la propiedad colectiva de los resguardos. Sin embargo, entre 2016 y 2023 fueron asesinados más de 300 líderes indígenas en el país, la mayoría en territorios con presencia de grupos armados ilegales.\"\n(Defensoría del Pueblo, 2023)\n\nSegún el texto, ¿cuál es la tensión central que enfrentan las comunidades indígenas en Colombia?","opciones":{"A":"La falta de leyes que reconozcan sus derechos territoriales y culturales.","B":"La distancia entre los derechos reconocidos legalmente y su aplicación efectiva.","C":"La negativa del Estado colombiano a reconocer la jurisdicción indígena especial.","D":"El desconocimiento de las comunidades indígenas sobre sus derechos constitucionales."},"respuesta":"B","retroalimentacion":"El texto afirma que Colombia tiene avances normativos (Constitución de 1991), pero que la protección efectiva no corresponde a esos avances. La tensión central es norma vs. realidad. La A es incorrecta porque sí existen leyes; la C es incorrecta porque la Constitución sí reconoció la jurisdicción especial indígena."},
+  {"id":12,"grado":11,"asignatura":"Ciencias Sociales","competencia":"pensamiento sistémico","enunciado":"Con base en datos del DANE (Censo 2018): el índice de pobreza multidimensional de comunidades afrocolombianas es de 45,6%, mientras el promedio nacional es de 19,6%. Su acceso a educación superior es del 18% vs. 32% nacional. Su representación en el Congreso es menos del 4%.\n\n¿Cuál concepto de las ciencias sociales explica mejor esta situación?","opciones":{"A":"Globalización, porque sus condiciones dependen del comercio internacional.","B":"Movilidad social ascendente, porque pueden acceder a educación superior.","C":"Exclusión social estructural, porque sus desventajas abarcan educación, ingreso y representación política de forma simultánea.","D":"Segregación voluntaria, porque se concentran geográficamente en ciertas regiones."},"respuesta":"C","retroalimentacion":"La exclusión social estructural se refiere a la privación simultánea en múltiples dimensiones (educación, ingresos, participación política) de forma persistente. Los datos muestran exactamente eso. La movilidad (B) sería lo contrario; la segregación voluntaria (D) malinterpreta la concentración geográfica histórica."},
+  {"id":13,"grado":11,"asignatura":"Inglés","competencia":"literal","enunciado":"Read the following text:\n\n\"I am an eleventh-grade student who balances school responsibilities and personal goals. Every morning, I wake up early and review my schedule because time management is essential. Last year, I joined extracurricular activities and improved my study habits, although it was difficult at the beginning.\"\n\nWhat did the student improve last year?","opciones":{"A":"His sports skills","B":"His family relationships","C":"His study habits","D":"His schedule"},"respuesta":"C","retroalimentacion":"The text states: 'I improved my study habits, although it was difficult at the beginning.' The student improved his study habits (C), not sports skills (A), family relationships (B), or schedule (D). This is a literal comprehension question — the answer is directly in the text."},
+  {"id":14,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Read: \"I joined extracurricular activities and improved my study habits, although it was difficult at the beginning. I learned important lessons because my teachers guided me and my classmates supported me.\"\n\nWhat can we infer about the student's attitude toward challenges?","opciones":{"A":"He avoids challenges","B":"He feels discouraged","C":"He learns from difficulties","D":"He ignores problems"},"respuesta":"C","retroalimentacion":"Although the text doesn't say it explicitly, we can infer the student has a resilient attitude: he faced difficulties, received support, and learned from the experience. Options A and D contradict the text; B is inconsistent with his continued improvement and learning."},
+  {"id":15,"grado":11,"asignatura":"Inglés","competencia":"uso del lenguaje","enunciado":"What is the function of the connector 'although' in the sentence: 'I joined extracurricular activities and improved my study habits, although it was difficult at the beginning'?","opciones":{"A":"To add information","B":"To show contrast","C":"To express cause","D":"To indicate result"},"respuesta":"B","retroalimentacion":"'Although' is a contrast connector (concessive conjunction). It connects two opposing ideas: joining activities/improving (effort/achievement) and it being difficult (obstacle). It does not express cause (because), addition (and/also), or result (so/therefore)."},
+
+  // ── LECTURA CRÍTICA adicionales ──
+  {"id":16,"grado":11,"asignatura":"Lectura Crítica","competencia":"literal","enunciado":"Lee el siguiente texto:\n\n\"La violencia no es solo un acto físico; es también un acto de silencio. Cuando ignoramos el sufrimiento ajeno, cuando miramos hacia otro lado ante la injusticia, estamos ejerciendo una forma de violencia tan real como el golpe. El silencio cómplice construye muros entre los seres humanos y destruye los lazos que permiten vivir en comunidad.\"\n\n¿Cuál es la idea principal del texto?","opciones":{"A":"La violencia física es la forma más grave de agresión humana.","B":"Ignorar el sufrimiento de otros es también una forma de violencia.","C":"Los muros entre las personas se construyen con ladrillos y cemento.","D":"La comunidad desaparece cuando hay conflictos entre sus miembros."},"respuesta":"B","retroalimentacion":"La idea principal está planteada explícitamente: el silencio ante el sufrimiento ajeno es también violencia. El texto amplía el concepto de violencia más allá del acto físico, incluyendo la indiferencia. Las demás opciones distorsionan o reducen el argumento central."},
+  {"id":17,"grado":11,"asignatura":"Lectura Crítica","competencia":"inferencial","enunciado":"Lee el siguiente fragmento:\n\n\"Los algoritmos de las redes sociales no fueron diseñados para informar sino para enganchar. Cada 'me gusta', cada comentario, cada minuto adicional que pasamos desplazando el dedo por la pantalla es un triunfo del negocio, no de la democracia. Lo que llamamos información en las redes es, en muchos casos, el espejo de lo que ya creemos.\"\n\n¿Qué se puede inferir sobre el efecto de las redes sociales en la opinión pública?","opciones":{"A":"Las redes sociales son herramientas diseñadas para fortalecer la democracia.","B":"Las personas usan las redes principalmente para buscar información objetiva.","C":"Las redes sociales tienden a reforzar las creencias previas de los usuarios en lugar de ampliarlas.","D":"Los algoritmos de redes sociales mejoran la calidad del debate político."},"respuesta":"C","retroalimentacion":"El texto señala que el contenido que vemos en redes es 'el espejo de lo que ya creemos', lo que permite inferir que los algoritmos refuerzan las creencias existentes (cámara de eco). Esto no amplía el pensamiento crítico sino que lo limita. Las opciones A, B y D contradicen el argumento del texto."},
+  {"id":18,"grado":11,"asignatura":"Lectura Crítica","competencia":"crítico","enunciado":"Lee el siguiente argumento:\n\n\"El ser humano es naturalmente egoísta; prueba de ello es que siempre busca su propio beneficio. Por tanto, ninguna acción humana es verdaderamente altruista, ya que incluso ayudar a otros produce satisfacción personal.\"\n\n¿Cuál es la principal debilidad lógica de este argumento?","opciones":{"A":"El argumento usa evidencia científica poco confiable.","B":"El argumento define 'egoísmo' de manera tan amplia que hace imposible demostrar lo contrario.","C":"El argumento no menciona ejemplos históricos de altruismo.","D":"El argumento confunde las emociones con los hechos objetivos."},"respuesta":"B","retroalimentacion":"El argumento comete una falacia de definición circular: define 'egoísta' tan ampliamente que cualquier acción —incluso ayudar— se clasifica como egoísta. Esto hace que la afirmación sea irrefutable por definición, no por evidencia. Una afirmación que no puede ser refutada no es un argumento lógico válido."},
+  {"id":19,"grado":11,"asignatura":"Lectura Crítica","competencia":"inferencial","enunciado":"Lee el siguiente texto:\n\n\"En 1952, el químico Stanley Miller demostró en un experimento que los componentes básicos de la vida podían formarse espontáneamente en condiciones similares a las de la Tierra primitiva. Sin embargo, la distancia entre moléculas orgánicas simples y la primera célula viva sigue siendo uno de los grandes enigmas de la ciencia.\"\n\n¿Qué conclusión se puede extraer del texto?","opciones":{"A":"El experimento de Miller demostró completamente cómo surgió la vida en la Tierra.","B":"La ciencia ya resolvió el problema del origen de la vida gracias a Miller.","C":"Existen avances científicos sobre el origen de la vida, pero la pregunta no está completamente resuelta.","D":"Las moléculas orgánicas y las células vivas son esencialmente lo mismo."},"respuesta":"C","retroalimentacion":"El texto presenta dos datos: Miller demostró que las moléculas orgánicas pueden formarse espontáneamente (avance), pero la brecha entre esas moléculas y la primera célula 'sigue siendo uno de los grandes enigmas' (problema abierto). La conclusión correcta reconoce ambos aspectos."},
+
+  // ── MATEMÁTICAS adicionales ──
+  {"id":20,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"Una empresa produce x unidades al día con un costo total de C(x) = 2x² − 40x + 300 (en miles de pesos). ¿Cuántas unidades debe producir para minimizar el costo?","opciones":{"A":"10","B":"20","C":"40","D":"5"},"respuesta":"A","retroalimentacion":"Para minimizar C(x) = 2x² − 40x + 300, se deriva: C'(x) = 4x − 40 = 0, entonces x = 10. La segunda derivada C''(x) = 4 > 0 confirma que es mínimo. Con x = 10: C(10) = 200 − 400 + 300 = 100 (miles de pesos)."},
+  {"id":21,"grado":11,"asignatura":"Matemáticas","competencia":"conceptual","enunciado":"Si log₂(x) = 3 y log₂(y) = 5, entonces log₂(x²·y) es igual a:","opciones":{"A":"11","B":"13","C":"8","D":"15"},"respuesta":"A","retroalimentacion":"Usando propiedades de logaritmos: log₂(x²·y) = log₂(x²) + log₂(y) = 2·log₂(x) + log₂(y) = 2(3) + 5 = 6 + 5 = 11."},
+  {"id":22,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"En un salón de 30 estudiantes, la probabilidad de que un alumno elegido al azar sea mujer es 3/5. ¿Cuántos hombres hay en el salón?","opciones":{"A":"18","B":"12","C":"15","D":"20"},"respuesta":"B","retroalimentacion":"Si P(mujer) = 3/5, entonces hay (3/5)×30 = 18 mujeres. Por tanto hay 30 − 18 = 12 hombres."},
+  {"id":23,"grado":11,"asignatura":"Matemáticas","competencia":"conceptual","enunciado":"La función f(x) = x² − 4x + 3 tiene sus raíces en x = 1 y x = 3. El valor mínimo de la función es:","opciones":{"A":"−1","B":"0","C":"1","D":"3"},"respuesta":"A","retroalimentacion":"El vértice de la parábola está en x = −b/2a = 4/2 = 2. Evaluando: f(2) = 4 − 8 + 3 = −1. Como el coeficiente de x² es positivo, la parábola abre hacia arriba y −1 es el valor mínimo."},
+  {"id":24,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"Si sen(θ) = 4/5 y θ está en el primer cuadrante, entonces cos(θ) es igual a:","opciones":{"A":"3/5","B":"4/3","C":"5/4","D":"1/5"},"respuesta":"A","retroalimentacion":"Por la identidad pitagórica: sen²(θ) + cos²(θ) = 1. Entonces cos²(θ) = 1 − (4/5)² = 1 − 16/25 = 9/25. Como θ está en el primer cuadrante, cos(θ) = 3/5."},
+
+  // ── CIENCIAS NATURALES adicionales ──
+  {"id":25,"grado":11,"asignatura":"Ciencias Naturales","competencia":"explicación de fenómenos","enunciado":"Una célula procariota y una célula eucariota se diferencian principalmente en que:","opciones":{"A":"Las procariotas tienen pared celular y las eucariotas no.","B":"Las eucariotas poseen núcleo definido con membrana nuclear y las procariotas no.","C":"Las procariotas realizan fotosíntesis y las eucariotas no.","D":"Las eucariotas carecen de ribosomas y las procariotas sí los tienen."},"respuesta":"B","retroalimentacion":"La diferencia fundamental es la presencia de núcleo delimitado por membrana nuclear en las células eucariotas. Las procariotas tienen material genético disperso en el citoplasma (nucleoide). Ambas tienen pared celular (aunque no siempre), ribosomas, y pueden realizar fotosíntesis (cianobacterias)."},
+  {"id":26,"grado":11,"asignatura":"Ciencias Naturales","competencia":"uso del conocimiento científico","enunciado":"Dos cargas eléctricas positivas de 2 C cada una se separan a una distancia de 1 metro. Si se duplica la distancia entre ellas, la fuerza eléctrica entre las cargas:","opciones":{"A":"Se duplica","B":"Se cuadruplica","C":"Se reduce a la mitad","D":"Se reduce a la cuarta parte"},"respuesta":"D","retroalimentacion":"Por la ley de Coulomb: F = k·q₁·q₂/r². Si la distancia se duplica (r → 2r), la nueva fuerza es F' = k·q₁·q₂/(2r)² = k·q₁·q₂/4r² = F/4. La fuerza se reduce a la cuarta parte porque varía de forma inversamente proporcional al cuadrado de la distancia."},
+  {"id":27,"grado":11,"asignatura":"Ciencias Naturales","competencia":"indagación","enunciado":"Un investigador quiere saber si el tipo de suelo afecta el crecimiento de una planta. Siembra plantas idénticas en suelo arcilloso, arenoso y limoso, bajo las mismas condiciones de luz, agua y temperatura. ¿Cuál es la variable independiente de este experimento?","opciones":{"A":"El crecimiento de las plantas","B":"La cantidad de agua suministrada","C":"El tipo de suelo","D":"La temperatura del ambiente"},"respuesta":"C","retroalimentacion":"La variable independiente es la que el investigador manipula deliberadamente para ver su efecto. En este caso es el tipo de suelo (arcilloso, arenoso, limoso). La variable dependiente es el crecimiento de las plantas. Luz, agua y temperatura son variables controladas (constantes)."},
+  {"id":28,"grado":11,"asignatura":"Ciencias Naturales","competencia":"explicación de fenómenos","enunciado":"Durante la meiosis, el cruce o entrecruzamiento (crossing-over) entre cromátidas no hermanas tiene como consecuencia principal:","opciones":{"A":"La duplicación del material genético en las células hijas.","B":"La separación de los cromosomas homólogos.","C":"La generación de nuevas combinaciones de alelos en los gametos.","D":"La reducción del número de cromosomas a la mitad."},"respuesta":"C","retroalimentacion":"El crossing-over ocurre en la profase I de la meiosis e implica el intercambio de segmentos entre cromátidas de cromosomas homólogos. Esto genera nuevas combinaciones alélicas (recombinación genética), aumentando la variabilidad genética en los gametos. La reducción a la mitad del número de cromosomas ocurre sin importar el crossing-over."},
+
+  // ── CIENCIAS SOCIALES adicionales ──
+  {"id":29,"grado":11,"asignatura":"Ciencias Sociales","competencia":"interpretación","enunciado":"Lee el siguiente texto:\n\n\"La urbanización en Colombia pasó del 57% en 1973 al 77% en 2018 (DANE). Este proceso estuvo impulsado no solo por oportunidades económicas sino también por el desplazamiento forzado causado por el conflicto armado, que entre 1985 y 2020 obligó a más de 8 millones de personas a abandonar sus territorios rurales.\"\n(UARIV, 2021)\n\n¿Cuál de las siguientes afirmaciones se puede derivar directamente del texto?","opciones":{"A":"La urbanización en Colombia fue un proceso exclusivamente voluntario y económico.","B":"El desplazamiento forzado contribuyó al crecimiento urbano en Colombia.","C":"La mayoría de los desplazados regresaron a sus territorios rurales después del conflicto.","D":"La urbanización redujo los niveles de pobreza en el país."},"respuesta":"B","retroalimentacion":"El texto menciona dos causas de urbanización: oportunidades económicas Y desplazamiento forzado. Por lo tanto, se puede afirmar directamente que el desplazamiento contribuyó al crecimiento urbano. La A es incorrecta porque el texto señala que no fue exclusivamente voluntario. Las opciones C y D no tienen sustento en el texto."},
+  {"id":30,"grado":11,"asignatura":"Ciencias Sociales","competencia":"pensamiento sistémico","enunciado":"El proceso de globalización económica ha generado en los países en desarrollo tanto oportunidades como tensiones. ¿Cuál de las siguientes situaciones representa mejor una TENSIÓN generada por este proceso?","opciones":{"A":"El acceso a tecnología de comunicación en zonas rurales.","B":"La apertura de nuevos mercados de exportación para productos agrícolas.","C":"La llegada de empresas multinacionales que desplazan a pequeños productores locales.","D":"El aumento de intercambios culturales entre países."},"respuesta":"C","retroalimentacion":"Una tensión es una consecuencia negativa o problemática. Cuando empresas multinacionales llegan con precios más bajos y mayor capacidad, desplazan a los pequeños productores locales que no pueden competir, generando desempleo y pérdida de tejido económico local. Las opciones A, B y D representan oportunidades o efectos positivos de la globalización."},
+  {"id":31,"grado":11,"asignatura":"Ciencias Sociales","competencia":"interpretación","enunciado":"La Revolución Industrial (siglo XVIII-XIX) transformó las estructuras sociales en Europa. ¿Cuál fue el cambio social más significativo derivado de este proceso?","opciones":{"A":"La desaparición de la monarquía como forma de gobierno en toda Europa.","B":"El surgimiento del proletariado urbano como nueva clase social.","C":"La eliminación de la esclavitud en todas las colonias europeas.","D":"El fortalecimiento de la economía feudal basada en la tierra."},"respuesta":"B","retroalimentacion":"La Revolución Industrial generó la migración masiva del campo a las ciudades y la concentración de trabajadores en fábricas, creando el proletariado industrial como nueva clase social. Esto transformó las relaciones de producción y dio origen a los movimientos obreros. Las otras opciones no son consecuencias directas ni precisas de la Revolución Industrial."},
+
+  // ── INGLÉS adicionales ──
+  {"id":32,"grado":11,"asignatura":"Inglés","competencia":"literal","enunciado":"Read the following text:\n\n\"Climate change is one of the most serious challenges of our time. Scientists warn that global temperatures have risen by approximately 1.1°C since the pre-industrial era. This warming is causing more frequent extreme weather events, rising sea levels, and threats to biodiversity. Immediate action is needed to reduce greenhouse gas emissions.\"\n\nAccording to the text, what has been the increase in global temperatures since the pre-industrial era?","opciones":{"A":"1.5°C","B":"2.0°C","C":"1.1°C","D":"0.5°C"},"respuesta":"C","retroalimentacion":"The text states explicitly: 'global temperatures have risen by approximately 1.1°C since the pre-industrial era.' This is a literal comprehension question — the answer is stated directly in the text. Avoid confusing this with the 1.5°C target from the Paris Agreement, which is not mentioned."},
+  {"id":33,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Read the same text about climate change:\n\n\"Immediate action is needed to reduce greenhouse gas emissions.\"\n\nWhat can be inferred about the current situation?","opciones":{"A":"Greenhouse gas emissions have already been significantly reduced.","B":"Countries have successfully implemented climate policies.","C":"Current emission levels are still too high and need to decrease.","D":"Scientists believe climate change is not a serious threat."},"respuesta":"C","retroalimentacion":"The phrase 'immediate action is NEEDED' implies that such action has not yet been taken sufficiently. This allows us to infer that emissions are still at problematic levels. Options A and B contradict the urgency expressed; option D directly contradicts the text which calls climate change 'one of the most serious challenges.'"},
+  {"id":34,"grado":11,"asignatura":"Inglés","competencia":"uso del lenguaje","enunciado":"Choose the sentence that is grammatically correct:","opciones":{"A":"If I would study more, I will pass the exam.","B":"If I study more, I will pass the exam.","C":"If I studied more, I will pass the exam.","D":"If I study more, I would pass the exam."},"respuesta":"B","retroalimentacion":"For real/possible conditions in English (First Conditional), the structure is: IF + present simple → will + base verb. Option B follows this correctly. Option A is wrong (no 'would' in the if-clause). Option C mixes tenses incorrectly. Option D uses Second Conditional (hypothetical), which implies the condition is unlikely."},
+  {"id":35,"grado":11,"asignatura":"Inglés","competencia":"uso del lenguaje","enunciado":"Select the correct passive voice form of: 'The teacher explains the lesson every day.'","opciones":{"A":"The lesson is explained by the teacher every day.","B":"The lesson was explained by the teacher every day.","C":"The lesson will be explained by the teacher every day.","D":"The lesson has been explained by the teacher every day."},"respuesta":"A","retroalimentacion":"The original sentence is in simple present tense ('explains'). The passive voice in simple present is: subject + is/are + past participle. 'The lesson IS EXPLAINED by the teacher every day' correctly transforms the active sentence. Options B (past), C (future), and D (present perfect) change the tense incorrectly."},
+
+  // ══ SEGUNDO PERIODO — LECTURA CRÍTICA (Acumulativa 2P) ══
+  {"id":36,"grado":11,"asignatura":"Lectura Crítica","competencia":"literal","enunciado":"Lee con atención el siguiente texto y responde:\n\nTEXTO 1 — El poder de la población de las grandes urbes\n\"Durante siglos, las ciudades han sido descritas como aglomeraciones antinaturales, violentas y con elevados costos de vida. ¿A qué se debe entonces la migración en todo el mundo del campo a la ciudad? Investigaciones recientes muestran que las ciudades producen una cantidad mayor de inventos y de oportunidades de desarrollo económico pues los aumentos de población promueven interacciones sociales más frecuentes e intensas. Estas interacciones se correlacionan con tasas más elevadas de innovación y productividad...\"\n(Adaptado de: Bettencourt, L. y West, G. Revista Investigación y ciencia, 2011)\n\nDe acuerdo con el texto 1, las ciudades fueron caracterizadas varios siglos atrás como:","opciones":{"A":"espacios de vulnerabilidad social y económica.","B":"espacios que promueven la producción.","C":"lugares que reducen el costo de vida.","D":"lugares de desarrollo económico."},"respuesta":"A","retroalimentacion":"El texto dice que las ciudades fueron descritas como 'aglomeraciones antinaturales, violentas y con elevados costos de vida'. Esto corresponde a 'espacios de vulnerabilidad social y económica' (A). Las opciones B y D describen la visión actual (positiva), no la histórica."},
+  {"id":37,"grado":11,"asignatura":"Lectura Crítica","competencia":"inferencial","enunciado":"Lee el siguiente texto:\n\n\"Durante siglos, las ciudades han sido descritas como aglomeraciones antinaturales, violentas y con elevados costos de vida. ¿A qué se debe entonces la migración en todo el mundo del campo a la ciudad? Investigaciones recientes muestran que las ciudades producen una cantidad mayor de inventos y de oportunidades de desarrollo económico pues los aumentos de población promueven interacciones sociales más frecuentes e intensas. Estas interacciones se correlacionan con tasas más elevadas de innovación y productividad, y suscitan presiones económicas que limpian las ineficiencias: la población se ve forzada a buscar nuevas formas de organización, así como productos y servicios más rentables.\"\n\nEl enunciado que mejor apoya la posición de los autores es:","opciones":{"A":"En comparación con las áreas rurales, las grandes urbes resultan menos costosas para sus habitantes.","B":"En las ciudades se crean pautas de mayor productividad que se materializan en costos de vida decrecientes gracias al desarrollo tecnológico.","C":"Hay una correspondencia entre el incremento de la población urbana debido a la migración del campo a la ciudad y el aumento de las rentas y la producción.","D":"Hay una ley de proporcionalidad directa entre la disminución de las propiedades socioeconómicas de las ciudades y el aumento del número de habitantes."},"respuesta":"C","retroalimentacion":"Los autores argumentan que más población → más interacciones → más innovación y productividad. La opción C es la única que recoge esta correspondencia directa entre migración urbana y aumento de rentas/producción. A y B no corresponden al argumento central; D contradice el texto."},
+  {"id":38,"grado":11,"asignatura":"Lectura Crítica","competencia":"crítico","enunciado":"Lee el siguiente texto:\n\n\"Durante siglos, las ciudades han sido descritas como aglomeraciones antinaturales, violentas y con elevados costos de vida. Investigaciones recientes muestran que las ciudades producen una cantidad mayor de inventos y de oportunidades de desarrollo económico pues los aumentos de población promueven interacciones sociales más frecuentes e intensas.\"\n\n¿Cómo se justifica la migración masiva del campo a las ciudades, a pesar de las descripciones negativas históricas?","opciones":{"A":"La migración es justificada porque las ciudades ofrecen más oportunidades de empleo y un entorno propicio para la innovación, a pesar de sus desafíos.","B":"La migración no se justifica, ya que los altos costos de vida y la violencia en las ciudades superan los beneficios que pueden ofrecer.","C":"La vida en el campo es preferible, ya que es más tranquila y menos costosa, por lo que la migración es un error.","D":"La migración es necesaria, pero debería ser regulada para evitar el crecimiento descontrolado de las ciudades."},"respuesta":"A","retroalimentacion":"Según el texto, a pesar de la imagen negativa histórica, la migración se explica porque las ciudades generan mayor innovación, productividad y oportunidades económicas. La respuesta A es la que recoge fielmente la argumentación del texto. Las opciones B y C contradicen el argumento; D introduce una idea que el texto no menciona."},
+  {"id":39,"grado":11,"asignatura":"Lectura Crítica","competencia":"inferencial","enunciado":"Lee el siguiente texto de Hume:\n\n\"Las disputas con hombres que se obstinan en mantener sus principios a toda costa son muy molestas, pero son aún más aquellas que se tienen con individuos enteramente insinceros que en realidad no creen en las opiniones que están defendiendo... Quienes han negado la realidad de las distinciones morales podrían ser clasificados entre los disputantes insinceros. No es concebible que criatura humana alguna pueda creer seriamente que todos los caracteres y todas las acciones merecen por igual la aprobación y el respeto de todos... Por lo tanto, el único modo de convencer a un antagonista de esta clase será dejarlo solo.\"\n(Hume, Investigación sobre los principios de la moral, 1993)\n\nDel segundo párrafo del texto se puede inferir correctamente que:","opciones":{"A":"los antagonistas insinceros prefieren no discutir sobre asuntos morales.","B":"la mayoría de los hombres distingue entre lo justo y lo injusto.","C":"es inconcebible que los seres humanos hagan distinciones morales.","D":"la educación y el hábito pueden borrar diferencias naturales entre los hombres."},"respuesta":"B","retroalimentacion":"Hume argumenta que es 'inconcebible que criatura humana alguna pueda creer seriamente que todos los caracteres merecen igual aprobación', y que incluso el más insensible 'tendrá que ser tocado por las imágenes de lo Justo y de lo Injusto'. De esto se infiere que la mayoría de los seres humanos sí distingue entre lo justo y lo injusto (B). La C invierte el argumento."},
+  {"id":40,"grado":11,"asignatura":"Lectura Crítica","competencia":"literal","enunciado":"Lee el siguiente texto de Hume:\n\n\"Las disputas con hombres que se obstinan en mantener sus principios a toda costa son muy molestas, pero son aún más aquellas que se tienen con individuos enteramente insinceros que en realidad no creen en las opiniones que están defendiendo, y que se enzarzan en la controversia por afectación, por espíritu de contradicción y por deseo de dar muestras de poseer una agudeza y un ingenio superiores a los del resto de la humanidad...\"\n(Hume, Investigación sobre los principios de la moral)\n\nSegún el texto, el interlocutor con quien es más molesto tener una discusión moral es el que:","opciones":{"A":"no dice lo que cree.","B":"es terco y dogmático.","C":"tiene convicciones muy firmes.","D":"es más ingenioso que los demás."},"respuesta":"A","retroalimentacion":"El texto dice que las disputas más molestas son con quienes 'en realidad no creen en las opiniones que están defendiendo', es decir, quienes no dicen lo que creen (A). El interlocutor terco (B) y el de convicciones firmes (C) también son molestos, pero en menor grado según el texto."},
+  {"id":41,"grado":11,"asignatura":"Lectura Crítica","competencia":"crítico","enunciado":"Lee el siguiente texto de Hume:\n\n\"Quienes han negado la realidad de las distinciones morales podrían ser clasificados entre los disputantes insinceros... La diferencia que la naturaleza ha establecido entre un hombre y otro es tan vasta y puede acentuarse hasta tal punto por virtud de la educación, el ejemplo y el hábito... Por lo tanto, el único modo de convencer a un antagonista de esta clase será dejarlo solo. Pues cuando vea que nadie está dispuesto a seguir discutiendo con él, lo más probable es que, de puro aburrimiento, decida por sí mismo ponerse del lado del sentido común y de la razón.\"\n\nLa afirmación que mejor expresa la conclusión central del segundo párrafo es:","opciones":{"A":"La mayoría de los seres humanos distingue entre lo justo y lo injusto.","B":"Hay que evitar discutir con el disputante insincero que niega las distinciones morales.","C":"El disputante sincero se pone del lado de la razón por aburrimiento.","D":"El antagonista insincero tiene una postura escéptica respecto a las distinciones morales."},"respuesta":"B","retroalimentacion":"La conclusión práctica del texto es que con el disputante insincero lo mejor es no discutir ('dejarlo solo'). La opción B recoge fielmente esta recomendación. A es una inferencia válida pero no la conclusión central del párrafo. C confunde 'sincero' con 'insincero'. D es una descripción, no una conclusión."},
+  {"id":42,"grado":11,"asignatura":"Lectura Crítica","competencia":"inferencial","enunciado":"Lee el siguiente fragmento de una novela ambientada en los años 1930:\n\nDavid compró un árbol de caucho para el jardín de su casa. Cuando lo mostró a su esposa Helena, ella dijo: \"¡Oh! [...] si va a quedar allá, justo en la mitad de todo, yo hubiera pensado en algo más pequeño, o incluso... ¿Qué tiene de malo el árbol de caucho? Bueno, si quieres saberlo, querido, personalmente creo que son más bien ordinarios. Son tan monótonos, David. Honestamente prefiero algo decorativo, especialmente para allá, justo en el frente de la casa, algo como arbustos con buena floración, o camelias, o celindas. Lo que se vería hermoso sería uno de esos arces japoneses enanos.\" David respondió: \"¡Ni se te ocurra, querida! ¡No quiero nada enano! Yo quiero un árbol. ¡Un árbol de verdad!\"\n\nCuando Helena está discutiendo con David, ella:","opciones":{"A":"enfatiza sus puntos de vista.","B":"indaga por los intereses del otro.","C":"se concentra en la búsqueda de un acuerdo.","D":"convierte la discusión en un ataque personal."},"respuesta":"A","retroalimentacion":"Helena insiste repetidamente en su preferencia por plantas decorativas y pequeñas, usando expresiones como 'honestamente prefiero' y 'lo que se vería hermoso'. Esto muestra que enfatiza sus puntos de vista sin ceder. No indaga por las razones de David (B), no busca un acuerdo (C), y no ataca la persona de David sino su elección (D)."},
+  {"id":43,"grado":11,"asignatura":"Lectura Crítica","competencia":"literal","enunciado":"Lee el siguiente fragmento:\n\nDavid trajo un árbol de caucho a casa. Su esposa Helena dice: \"Ven a verlo\". Cuando Helena lo vio, \"su expresión cambió... y tengo que admitir que se veía más bien sucio, débil y gris con sus raíces apretadas como un nudo de estopa mojada sin forma.\"\n\nHelena cambió su expresión porque:","opciones":{"A":"David compró un árbol.","B":"el árbol le pareció costoso.","C":"el árbol no tenía la mejor apariencia.","D":"David quería sembrar el árbol en el jardín."},"respuesta":"C","retroalimentacion":"El texto explica directamente que el árbol 'se veía más bien sucio, débil y gris con sus raíces apretadas'. Esto indica que el cambio de expresión de Helena se debió a la mala apariencia del árbol (C). No hay mención del costo (B) en ese momento, y el lugar donde sembrarlo (D) se discute después."},
+
+  // ══ SEGUNDO PERIODO — MATEMÁTICAS (Acumulativa 2P) ══
+  {"id":44,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"En 1980, 4.500 millones de habitantes poblaban la Tierra con un crecimiento del 2% anual. La función que modela la población es H(t) = 4.500·e^(0,02t), donde t es el número de años desde 1980.\n\nPara determinar el número de años que deben transcurrir desde 1980 para que la población sea el doble de la que había ese año, se debe hallar el valor de t que satisface la ecuación:","opciones":{"A":"2 = e^(0,02(t−1980))","B":"2 = e^(0,02t)","C":"H(t) = 9.000·e^(0,02t)","D":"H(t) = 4.500·e^(0,02(2t))"},"respuesta":"B","retroalimentacion":"Si la población inicial es 4.500 y queremos que sea el doble (9.000), planteamos: 9.000 = 4.500·e^(0,02t). Dividiendo ambos lados entre 4.500: 2 = e^(0,02t). Esta es la ecuación correcta (B). La opción A usa (t−1980), lo cual sería incorrecto porque t ya mide años desde 1980."},
+  {"id":45,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"Usando la función H(t) = 4.500·e^(0,02t) (en millones de habitantes, con t en años desde 1980), y sabiendo que se necesita 0,5 km² de tierra cultivable por persona y que hay 40×10⁹ km² de tierra cultivable, ¿después de cuántos años NO se podrá suplir la necesidad de alimento? El valor de t a partir del cual se supera la capacidad es:","opciones":{"A":"t = (1/0,02) · ln(800/45)","B":"80×10⁹ = (4.500×10⁶)·e^(0,02t)","C":"t = (1/0,02) · ln(800×10⁹/4.500)","D":"(40×10⁷) = 45·e^(0,02t)"},"respuesta":"A","retroalimentacion":"Capacidad máxima: 40×10⁹ km² ÷ 0,5 km²/persona = 80×10⁹ personas = 80.000 millones. Igualando con H(t): 80.000 = 4.500·e^(0,02t) → e^(0,02t) = 80.000/4.500 = 800/45. Por tanto t = (1/0,02)·ln(800/45). La opción A es correcta. C tiene las unidades mezcladas incorrectamente."},
+  {"id":46,"grado":11,"asignatura":"Matemáticas","competencia":"conceptual","enunciado":"Una empresa fabrica camisetas. El costo total de producción está dado por:\nC(x) = 5.000x + 200.000\ndonde x es el número de camisetas producidas.\n\nSi cada camiseta se vende a $8.000, ¿cuál es la utilidad obtenida al vender 150 camisetas?","opciones":{"A":"$250.000","B":"$300.000","C":"$450.000","D":"$1.200.000"},"respuesta":"A","retroalimentacion":"Ingresos = 8.000 × 150 = $1.200.000. Costos = 5.000 × 150 + 200.000 = 750.000 + 200.000 = $950.000. Utilidad = Ingresos − Costos = 1.200.000 − 950.000 = $250.000. La respuesta es A."},
+  {"id":47,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"Un poste de 12 metros proyecta una sombra de 4 metros. Al mismo tiempo, un edificio proyecta una sombra de 20 metros.\n\n¿Cuál es la altura del edificio?","opciones":{"A":"40 m","B":"50 m","C":"60 m","D":"80 m"},"respuesta":"C","retroalimentacion":"Por semejanza de triángulos: altura_poste/sombra_poste = altura_edificio/sombra_edificio. Entonces: 12/4 = h/20. Despejando: h = (12 × 20)/4 = 240/4 = 60 metros."},
+  {"id":48,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"En una caja hay 5 bolas rojas, 3 bolas azules y 2 bolas verdes (10 en total). Se extrae una bola al azar y luego otra sin reemplazo.\n\n¿Cuál es la probabilidad de que ambas bolas sean rojas?","opciones":{"A":"1/9","B":"2/9","C":"5/18","D":"10/81"},"respuesta":"B","retroalimentacion":"P(primera roja) = 5/10 = 1/2. P(segunda roja | primera fue roja) = 4/9. P(ambas rojas) = (5/10) × (4/9) = 20/90 = 2/9. La respuesta es B. La opción D sería incorrecta porque usa 10/10 × 10/9 (con reemplazo y error de conteo)."},
+  {"id":49,"grado":11,"asignatura":"Matemáticas","competencia":"conceptual","enunciado":"Considera la ecuación cuadrática:\n2x² − 5x − 3 = 0\n\n¿Cuál es la suma de las soluciones de la ecuación?","opciones":{"A":"−5/2","B":"5/2","C":"3","D":"−3"},"respuesta":"B","retroalimentacion":"Por el teorema de Vieta, para ax² + bx + c = 0, la suma de las raíces es −b/a. Con a = 2 y b = −5: suma = −(−5)/2 = 5/2. La respuesta es B. Comprobación: las raíces son x = 3 y x = −1/2, y 3 + (−1/2) = 5/2."},
+  {"id":50,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"Las edades de cinco estudiantes son: 12, 15, 15, 18, 20.\n\n¿Cuál de las siguientes afirmaciones es verdadera?","opciones":{"A":"La media es mayor que la mediana.","B":"La media y la mediana son iguales.","C":"La moda es 20.","D":"La mediana es mayor que la media."},"respuesta":"A","retroalimentacion":"Media = (12+15+15+18+20)/5 = 80/5 = 16. Mediana = valor central con datos ordenados = 15. Moda = 15 (el valor que más se repite). Como Media (16) > Mediana (15), la afirmación verdadera es A."},
+  {"id":51,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"Si todos los números del conjunto A son múltiplos de 3 y algunos múltiplos de 3 son pares, entonces se puede concluir que:","opciones":{"A":"Todos los elementos de A son pares.","B":"Ningún elemento de A es impar.","C":"Algunos elementos de A podrían ser pares.","D":"Todos los números pares pertenecen a A."},"respuesta":"C","retroalimentacion":"La premisa dice 'algunos' múltiplos de 3 son pares, no 'todos'. Por tanto solo podemos concluir que algunos elementos de A podrían ser pares (C). No podemos afirmar que todos son pares (A) ni que ninguno es impar (B); tampoco que todos los pares pertenezcan a A (D)."},
+  {"id":52,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento","enunciado":"Una escalera de 10 m se apoya contra una pared formando un ángulo de 60° con el suelo.\n\n¿Cuál es la altura alcanzada por la escalera en la pared?","opciones":{"A":"5√3 m","B":"5 m","C":"10√3 m","D":"20 m"},"respuesta":"A","retroalimentacion":"En el triángulo rectángulo formado: la escalera es la hipotenusa (10 m) y el ángulo con el suelo es 60°. La altura = hipotenusa × sen(60°) = 10 × (√3/2) = 5√3 m ≈ 8,66 m. La base horizontal = 10 × cos(60°) = 10 × 1/2 = 5 m."},
+
+  // ══ SEGUNDO PERIODO — INGLÉS (Acumulativa 2P) ══
+  {"id":53,"grado":11,"asignatura":"Inglés","competencia":"literal","enunciado":"Read the following text:\n\n\"Last Friday evening, Daniel was working on an important project at home while his sister was studying in her room. Their parents were cooking dinner in the kitchen. Suddenly, Daniel received a message saying that he is going to present his project at a science fair next week. He was feeling nervous because he was not expecting the opportunity. He is also preparing a short speech for the presentation. At the same time, his sister was preparing for her final exams. She is going to travel to another city after finishing school. Both of them were focused on their goals, but they were also supporting each other during a busy week.\"\n\nWhich sentence from the text is written in the Present Continuous tense?","opciones":{"A":"Daniel was working on an important project.","B":"She is going to travel to another city after school.","C":"He is going to present his project at a science fair.","D":"He is also preparing a short speech for the presentation."},"respuesta":"D","retroalimentacion":"Present Continuous = is/are + verb-ing. Option D: 'He IS PREPARING a short speech' = present continuous ✓. Options A and B use 'was working/going' (past continuous / future 'going to'). Option C uses 'is going to' which is a future structure, not present continuous. 'Preparing' in D is the ongoing action at the present moment."},
+  {"id":54,"grado":11,"asignatura":"Inglés","competencia":"literal","enunciado":"Read: \"Last Friday evening, Daniel was working on an important project at home while his sister ___ in her room.\"\n\nWhile Daniel was working at home, his sister ___ in her room.","opciones":{"A":"was studying","B":"studies","C":"is studying","D":"studied"},"respuesta":"A","retroalimentacion":"The text uses Past Continuous to describe two simultaneous actions in the past: 'Daniel WAS WORKING... while his sister WAS STUDYING.' Past Continuous = was/were + verb-ing. 'Studies' (B) is simple present; 'is studying' (C) is present continuous; 'studied' (D) is simple past, which doesn't express the simultaneous ongoing nature."},
+  {"id":55,"grado":11,"asignatura":"Inglés","competencia":"literal","enunciado":"Read: \"Suddenly, Daniel received a message saying that he ___ present his project at a science fair next week.\"\n\nSelect the correct form to complete the sentence:","opciones":{"A":"was going to","B":"is going to","C":"will going to","D":"goes to"},"respuesta":"B","retroalimentacion":"The message is in the present tense (reported speech in the text): 'he IS GOING TO present his project.' 'Going to' expresses a future plan that has been decided. 'Was going to' (A) would be past; 'will going to' (C) is grammatically incorrect; 'goes to' (D) is simple present and doesn't express future intention."},
+  {"id":56,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Read: \"Suddenly, Daniel received a message saying that he is going to present his project at a science fair next week. He was feeling nervous because he was not expecting the opportunity.\"\n\nWhat can we infer about Daniel's reaction to the news?","opciones":{"A":"He was happy and relaxed.","B":"He was angry with his teacher.","C":"He ignored the message.","D":"He was nervous because it was unexpected."},"respuesta":"D","retroalimentacion":"The text states explicitly: 'He was feeling nervous because he was not expecting the opportunity.' This directly supports D. There is no evidence of happiness/relaxation (A), anger (B), or ignoring the message (C) — in fact, he started preparing a speech, which shows the opposite of ignoring it."},
+  {"id":57,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Read the text about Daniel and his sister studying at home on a Friday evening, each working on their own goals while supporting each other.\n\nBased on the text, where can we infer Daniel was when he received the message about the science fair?","opciones":{"A":"He was at school with his teachers.","B":"He was probably in his room working on his project.","C":"He was in the kitchen cooking dinner.","D":"He was outside the house with his friends."},"respuesta":"B","retroalimentacion":"The text says Daniel was working at home on a project. The kitchen is where his parents were cooking. There is no mention of school or friends. Since he was working on his project at home, the most logical inference is that he was in his room (B). This is an inference — the text doesn't say 'in his room' explicitly, but it's the most reasonable conclusion."},
+  {"id":58,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Read: \"Both of them were focused on their goals, but they were also supporting each other during a busy week.\"\n\nWhat does the fact that Daniel and his sister were both working on their goals at the same time suggest about their family environment?","opciones":{"A":"It suggests that they spend most of their time arguing with each other.","B":"It suggests that their family does not support education.","C":"It suggests that their family encourages responsibility and personal goals.","D":"It suggests that they are not focused on their studies."},"respuesta":"C","retroalimentacion":"The text shows both siblings working hard on different goals AND supporting each other. This environment of productivity and mutual support suggests a family that values responsibility and personal achievement (C). Options A and D directly contradict the text; B contradicts the clear evidence of educational engagement."},
+  {"id":59,"grado":11,"asignatura":"Inglés","competencia":"uso del lenguaje","enunciado":"Read: \"Daniel's sister is going to travel ___ another city after finishing school.\"\n\nBased on the text, which sentence correctly uses a preposition?","opciones":{"A":"She is going to travel at another city.","B":"She is going to travel to another city.","C":"She is going to travel on another city.","D":"She is going to travel for another city."},"respuesta":"B","retroalimentacion":"The correct preposition for movement/direction toward a place is 'TO': 'travel TO another city.' Prepositions: AT indicates a specific location (not movement); ON indicates surface or time; FOR indicates purpose or duration. When expressing movement from one place to another, we always use 'to'."},
+  {"id":60,"grado":11,"asignatura":"Inglés","competencia":"crítico","enunciado":"Based on Daniel's experience managing a busy week with a project, a speech, and unexpected news:\n\nWhat is the most important benefit of managing time well during a busy week?","opciones":{"A":"To avoid responsibilities.","B":"To waste more time.","C":"To avoid studying.","D":"To reduce stress and improve performance."},"respuesta":"D","retroalimentacion":"Daniel's situation shows the challenge of managing multiple responsibilities at once. Good time management allows him to handle both the project and the speech without giving up. The main benefit is reducing stress and improving performance (D). Options A, B, and C are counterproductive and contradict the lesson shown in the text."},
+  {"id":61,"grado":11,"asignatura":"Inglés","competencia":"crítico","enunciado":"Read Daniel's situation: he was working on a project at home when he unexpectedly received news that he must present at a science fair next week. Despite feeling nervous, he continued working and started preparing a speech.\n\nWhat is the best interpretation of Daniel's situation?","opciones":{"A":"He is overwhelmed but has an opportunity.","B":"He is not interested in the project.","C":"He wants to quit school.","D":"He has no responsibilities."},"respuesta":"A","retroalimentacion":"Daniel feels nervous (overwhelmed) because of the unexpected challenge, but the opportunity to present at a science fair is positive. He doesn't give up — he prepares a speech. This duality (challenge + opportunity) makes A the best interpretation. B, C, and D are directly contradicted by his actions in the text."},
+  {"id":62,"grado":11,"asignatura":"Inglés","competencia":"crítico","enunciado":"Read: \"Daniel received a message saying he is going to present his project at a science fair next week. He was feeling nervous because he was not expecting the opportunity. He is also preparing a short speech for the presentation.\"\n\nWhat does Daniel's reaction to the science fair news reveal about his character?","opciones":{"A":"He gives up easily when faced with challenges.","B":"He avoids responsibility and hard work.","C":"Despite feeling nervous, he continues working toward his goals.","D":"He prefers social activities over academic work."},"respuesta":"C","retroalimentacion":"Despite his nervousness, Daniel immediately starts preparing a speech. This shows resilience — the ability to continue working toward goals even when feeling anxious or unprepared. Options A and B are directly contradicted by his action of preparing the speech. Option D has no support in the text."},
+
+  // ══ SEGUNDO PERIODO — CIENCIAS SOCIALES (Acumulativa 2P) ══
+  {"id":63,"grado":11,"asignatura":"Ciencias Sociales","competencia":"interpretación","enunciado":"El derecho internacional humanitario fue implementado desde mediados del siglo XX, con el propósito de proteger a las personas de las crueldades de la guerra. Se enfocó en evitar tratos inhumanos a prisioneros de guerra y en excluir a la población civil de los conflictos.\n\nTales espacios fueron propiciados porque:","opciones":{"A":"Muchas personas sufrieron tratos inhumanos sin tener que ver con conflicto alguno.","B":"Los Estados proponentes pensaron en una solución racional de los conflictos, a través del valor del individuo.","C":"Se pensó en la salvaguarda de la vida, como fundamento primordial y respeto a la dignidad.","D":"La estabilidad de los humanos, prima ante todas las pretensiones políticas o económicas, sea el estado que sea."},"respuesta":"C","retroalimentacion":"El DIH surgió del reconocimiento de que la vida humana y la dignidad son valores fundamentales que no pueden vulnerarse ni en situaciones de guerra. La opción C expresa directamente este principio. Las demás opciones son parcialmente correctas pero no capturan el fundamento central del DIH: la dignidad y la salvaguarda de la vida."},
+  {"id":64,"grado":11,"asignatura":"Ciencias Sociales","competencia":"pensamiento crítico","enunciado":"Los derechos humanos intentan fortalecer el valor hacia el ser, como base fundamental para establecer relaciones justas. Muchos Estados han adoptado los tratados internacionales sobre derechos humanos, pero todavía quedan lugares donde se incumple con lo establecido en esos pactos.\n\nSi se quisiera plantear una crítica a esos Estados, esta puede ser:","opciones":{"A":"Sus acciones no han sido suficientes para concretar la protección a cada uno de los habitantes.","B":"Las adopciones de esos tratados no se acompañan de trabajos que garanticen su cumplimiento.","C":"Los Estados en ocasiones se dedican a mostrar un posible interés por estar a la vanguardia del derecho internacional.","D":"Unas son sus intenciones a la luz de la comunidad internacional y otras las que se manejan internamente."},"respuesta":"B","retroalimentacion":"La crítica más precisa y fundamentada es B: adoptar un tratado sin implementar políticas, instituciones o mecanismos que garanticen su cumplimiento efectivo es una falla estructural. Las demás opciones (A, C, D) son válidas pero más generales o subjetivas. B señala la brecha específica entre el compromiso formal y la acción concreta."},
+  {"id":65,"grado":11,"asignatura":"Ciencias Sociales","competencia":"interpretación","enunciado":"Los derechos humanos resaltan el valor individual de todas las personas. Sin embargo, en muchas situaciones se puede evidenciar que lo establecido allí se vulnera abiertamente en algunos países, dejando dudas sobre su verdadero alcance.\n\nDe lo anterior se puede inferir que:","opciones":{"A":"Los derechos humanos son solo ideas que promulgan los Estados para dar un mínimo de tranquilidad.","B":"Aunque los tratados internacionales sobre derechos contribuyen a fortalecer el respeto, queda mucho por hacer, porque en varios espacios todavía existe un brote de violencia incontrolado.","C":"Los organismos internacionales realizan pocas revisiones al cumplimiento de lo aceptado por distintos países, desconociendo uno de los principios básicos de estos pactos.","D":"Aunque los trabajos para el reconocimiento de los derechos humanos han intentado reafirmar su importancia, la falta de autoridad sobre su manejo es evidente."},"respuesta":"B","retroalimentacion":"La inferencia más equilibrada y sostenida por el texto es B: reconoce los avances ('contribuyen a fortalecer el respeto') pero también las limitaciones ('queda mucho por hacer'). A es una afirmación demasiado radical. C y D hacen afirmaciones específicas que van más allá de lo que el texto permite inferir."},
+  {"id":66,"grado":11,"asignatura":"Ciencias Sociales","competencia":"pensamiento crítico","enunciado":"Los medios tienen la capacidad de influir en la forma en que las personas piensan y opinan sobre distintos temas. A través de la selección de noticias, el enfoque que les dan y el lenguaje utilizado, pueden orientar la percepción de la realidad.\n\nSe puede atribuir la causa de ese asunto a:","opciones":{"A":"Las personas generalmente evitan hacer contrastes entre diferentes fuentes, que les proporcionen información menos parcial.","B":"Los medios son muy fuertes y por ello tienen la capacidad de influenciar la mentalidad de las personas.","C":"La falta de educación permite que los individuos no sean críticos de las noticias.","D":"No existe un proyecto que intente despertar el interés general por hacer análisis crítico de la información."},"respuesta":"A","retroalimentacion":"La causa principal de que los medios puedan influir tanto en la opinión es que las personas no verifican la información en múltiples fuentes (A). Si los ciudadanos contrastaran distintas fuentes, el poder de manipulación de los medios disminuiría. B describe el efecto, no la causa. C y D son causas secundarias menos directas."},
+  {"id":67,"grado":11,"asignatura":"Ciencias Sociales","competencia":"pensamiento crítico","enunciado":"Los medios de comunicación son tan importantes que pueden construir modelos mentales en la gente: la moda, estilos de vida y hasta el criterio frente a ciertos eventos son algunos de los alcances que tienen en la conformación de la sociedad.\n\nUna crítica a este tipo de influencia es:","opciones":{"A":"Los medios son el resultado de grandes intereses.","B":"La función de los medios está altamente influenciada.","C":"Los medios no tienen la capacidad de asumir un criterio imparcial.","D":"Los lectores no obligan a mejorar la calidad de información ofrecida por los medios."},"respuesta":"C","retroalimentacion":"La crítica más directa a la influencia mediática en la formación de modelos mentales es que los medios no tienen criterio imparcial (C): al estar ligados a intereses económicos, políticos o ideológicos, no pueden construir realidad de forma neutral. A y B son observaciones pero no críticas directas al tipo de influencia descrito; D critica a los lectores, no a los medios."},
+  {"id":68,"grado":11,"asignatura":"Ciencias Sociales","competencia":"interpretación","enunciado":"Algunos periodistas han sido objeto de amenazas o atentados contra sus vidas. La persecución se da por parte de grupos al margen de la ley que se incomodan por las denuncias hechas por los comunicadores, y también al hacer público el proceder de personajes de sectores relevantes de la sociedad.\n\nDe la anterior información es posible deducir que:","opciones":{"A":"El periodismo es un oficio difícil de ejercer.","B":"El oficio comprometido de informar tiene serios riesgos.","C":"Ser comunicador en algunos países trae problemas.","D":"Los profesionales con sus actuaciones tendenciosas se crean enemigos."},"respuesta":"B","retroalimentacion":"La deducción más precisa y fundamentada es B: el texto habla específicamente del periodismo comprometido (denuncias, exposición de poderes) como causa de las amenazas. 'Serios riesgos' captura la gravedad descrita. A y C son verdaderas pero demasiado generales; D culpa al periodista, lo cual contradice el espíritu del texto."},
+  {"id":69,"grado":11,"asignatura":"Ciencias Sociales","competencia":"pensamiento crítico","enunciado":"Hoy día la información es mucho más accesible porque a través de las redes digitales cualquier persona puede crear contenido, sin importar el lugar. Es posible saber lo que sucede en cualquier rincón del territorio casi al instante. Sin embargo, es posible encontrar en esto una problemática porque:","opciones":{"A":"La información no se trabaja con rigor.","B":"Los informantes no conocen las técnicas para informar.","C":"Hay mucha información, lo cual impide hacer análisis veraz.","D":"El oficio de comunicación ahora se asocia a un juego que no tiene reglas."},"respuesta":"C","retroalimentacion":"La problemática central que se deriva de la sobreabundancia de información digital es que la cantidad excesiva dificulta el análisis riguroso y veraz (C). La infoxicación o saturación informativa impide discernir lo verdadero de lo falso. A y B son problemas reales pero secundarios; D es una afirmación extrema que generaliza en exceso."},
+  {"id":70,"grado":11,"asignatura":"Ciencias Sociales","competencia":"interpretación","enunciado":"Las personas en Colombia tienen la oportunidad de participar activamente en aspectos políticos, económicos y sociales. Sin embargo, hay quienes se quejan debido a las libertades otorgadas a los individuos, expresando que esto puede ser un problema porque:","opciones":{"A":"Las personas no saben manejar los mecanismos que se les ofrece, y por ello su injerencia puede ser tendenciosa.","B":"Se constituyen en un obstáculo para las propuestas que no comparten.","C":"Su aporte generalmente es usado por personas inescrupulosas para producir inestabilidad.","D":"En ocasiones las opiniones emitidas carecen de cualquier fundamento argumentativo."},"respuesta":"A","retroalimentacion":"El argumento central de quienes critican la participación amplia es que los ciudadanos no siempre están preparados para usar adecuadamente los mecanismos de participación (A), lo cual puede generar decisiones parciales o poco informadas. B, C y D son críticas válidas pero periféricas; A es la más estructural y directamente relacionada con el ejercicio de las libertades."},
+  {"id":71,"grado":11,"asignatura":"Ciencias Sociales","competencia":"interpretación","enunciado":"La democracia representativa es la posibilidad que tienen todos los colombianos no solo de escoger sus representantes, sino de participar activamente en la toma de decisiones sobre su comunidad. Tal proceso evidencia una problemática consistente en:","opciones":{"A":"El desconocimiento que tiene la gente sobre este tipo de mecanismos.","B":"El desinterés de prepararse para el buen uso de estos medios.","C":"El facilismo que tienen las personas para dar una opinión que solo se queda en eso.","D":"Las entidades del Estado no prestan una asesoría adecuada a las personas para empoderarlas de estos temas."},"respuesta":"A","retroalimentacion":"La problemática más estructural de la democracia representativa en Colombia es el desconocimiento ciudadano sobre los mecanismos de participación (A). Sin conocer cómo participar, las demás problemáticas son secundarias. El desinterés (B), el facilismo (C) y la falta de asesoría estatal (D) también son válidos, pero el desconocimiento es la causa raíz."},
+  {"id":72,"grado":11,"asignatura":"Ciencias Sociales","competencia":"pensamiento crítico","enunciado":"Colombia es uno de los países que se caracteriza por adoptar tratados internacionales que buscan proteger los derechos de las personas más vulnerables. La obligación de cumplirlos se acepta en el momento que a través de una ley interna se aprueban; incluso exponiéndose a sanciones por la violación de derechos.\n\nSi se quisiera plantear una crítica frente a ese proceso, esta puede ser:","opciones":{"A":"Los funcionarios en Colombia no se detienen a estudiar los alcances de un tratado internacional.","B":"Su intención es mostrar al exterior el valor hacia sus habitantes, pero internamente se carece de acciones efectivas.","C":"Aunque existen sanas intenciones al aceptar esos tratados, aún quedan enormes vacíos entre los documentos legales y las realidades sociales.","D":"Al Estado solo le importa propiciar espacios para recibir apoyos internacionales de cualquier carácter."},"respuesta":"C","retroalimentacion":"La crítica más equilibrada y fundamentada es C: reconoce las buenas intenciones en la adopción de tratados, pero señala la brecha entre los documentos formales y la realidad social vivida por los ciudadanos. B y D son críticas válidas pero más parciales o negativas; A es una generalización que no tiene sustento directo en el texto."},
+
+  // ══ SEGUNDO PERIODO — CIENCIAS NATURALES (Acumulativa 2P) ══
+  {"id":73,"grado":11,"asignatura":"Ciencias Naturales","competencia":"uso del conocimiento científico","enunciado":"En una red trófica marina (fitoplancton → zooplancton → sardinas → calamares/peces → atún/tiburón) se detectó la presencia de metales pesados provenientes de descargas industriales. Los estudios muestran que los tiburones (nivel trófico superior) presentan las mayores concentraciones de estas sustancias en sus tejidos.\n\n¿Cuál de las siguientes opciones explica mejor este fenómeno?","opciones":{"A":"Los metales pesados afectan más a los organismos cercanos a la fuente y disminuyen en niveles tróficos superiores.","B":"Los contaminantes ingresan a la red trófica y se transfieren entre organismos sin cambiar su concentración.","C":"Los metales pesados permanecen en el agua y afectan de forma similar a todos los organismos.","D":"Las sustancias tóxicas aumentan su concentración a lo largo de la cadena trófica (biomagnificación)."},"respuesta":"D","retroalimentacion":"El fenómeno descrito es la biomagnificación: los contaminantes se acumulan en los tejidos y, al pasar de un nivel trófico al siguiente, su concentración aumenta porque los depredadores consumen gran cantidad de presas contaminadas. Por eso los tiburones (tope de la cadena) tienen las mayores concentraciones. Las opciones A y C describen lo opuesto."},
+  {"id":74,"grado":11,"asignatura":"Ciencias Naturales","competencia":"uso del conocimiento científico","enunciado":"En una zona costera con contaminación por metales pesados provenientes de descargas industriales que afectan la red trófica marina, se busca una estrategia sostenible para mitigar el problema.\n\n¿Cuál de las siguientes estrategias sería más adecuada?","opciones":{"A":"Implementar controles al consumo de especies marinas con alta concentración de contaminantes.","B":"Establecer monitoreo periódico de contaminantes en organismos de diferentes niveles tróficos.","C":"Aplicar tratamientos a las descargas industriales antes de su ingreso a los cuerpos de agua.","D":"Regular la extracción de especies para mantener el equilibrio de la red trófica."},"respuesta":"C","retroalimentacion":"La estrategia más efectiva y sostenible es atacar el problema en la fuente: tratar las descargas industriales antes de que lleguen al mar (C). Las opciones A y B son medidas de seguimiento o control de daño, pero no solucionan el origen. D aborda el equilibrio ecológico pero no el problema de contaminación."},
+  {"id":75,"grado":11,"asignatura":"Ciencias Naturales","competencia":"explicación de fenómenos","enunciado":"A nivel del mar (0 km de altura), el agua hierve a 100°C. A mayor altura, hay menos partículas de aire por volumen (menor presión atmosférica). El punto de ebullición corresponde a la temperatura a la cual la presión de vapor del líquido iguala la presión externa.\n\n¿Qué ocurre con el punto de ebullición del agua al aumentar la altura?","opciones":{"A":"Disminuye, porque la presión atmosférica es menor.","B":"Aumenta, porque la presión atmosférica disminuye.","C":"Permanece constante, porque la composición del agua no cambia.","D":"Desaparece, porque el agua no puede hervir sin presión."},"respuesta":"A","retroalimentacion":"A mayor altura, la presión atmosférica disminuye. Como el agua hierve cuando su presión de vapor iguala la presión externa, con menos presión atmosférica, la presión de vapor necesaria para hervir es menor, lo que se alcanza a temperaturas más bajas. Por eso en Bogotá el agua hierve a ~94°C y en el Everest a ~70°C. La respuesta es A."},
+  {"id":76,"grado":11,"asignatura":"Ciencias Naturales","competencia":"indagación","enunciado":"Unos estudiantes analizaron el agua de un río y encontraron altos niveles de cadmio y plomo provenientes de filtraciones de pilas descompuestas en un botadero cercano. Los estudiantes proponen que en el futuro se deberían separar las pilas del resto de los desechos en contenedores completamente aislados.\n\nCon base en la información anterior, se puede afirmar que la propuesta es:","opciones":{"A":"Inapropiada, porque es mejor desarmar las pilas y luego desecharlas.","B":"Apropiada, porque se evitaría la presencia de metales pesados en el agua.","C":"Apropiada, porque luego se podrían reutilizar las pilas desechadas.","D":"Inapropiada, porque es mejor quemarlas ya que no entrarían en contacto con el agua."},"respuesta":"B","retroalimentacion":"Separar las pilas en contenedores aislados evitaría que los metales pesados (cadmio, plomo) se filtren al agua. La propuesta es apropiada (B) porque ataca la causa directa del problema. La opción A es incorrecta (desarmar pilas aumenta el riesgo); C es incorrecta (las pilas usadas no se reutilizan); D es incorrecta (quemarlas libera gases tóxicos)."},
+  {"id":77,"grado":11,"asignatura":"Ciencias Naturales","competencia":"uso del conocimiento científico","enunciado":"Los clorofluorocarbonos (CFC) se usaban como refrigerantes en neveras. Debido a su alto potencial de destrucción de la capa de ozono (O₃), se reemplazaron por los hidrofluorocarbonos (HFC). Una gráfica muestra que las emisiones globales de CFC alcanzaron su pico alrededor de 1988 y han disminuido desde entonces, mientras que las de HFC han aumentado.\n\nDe acuerdo con esta tendencia, ¿qué tendencia se observa en las emisiones de gases tipo CFC después del año 1988?","opciones":{"A":"Las emisiones aumentan y disminuyen alternadamente.","B":"Las emisiones disminuyen.","C":"Las emisiones se mantienen constantes.","D":"Las emisiones aumentan."},"respuesta":"B","retroalimentacion":"Desde 1988 las emisiones de CFC han disminuido consistentemente, gracias al Protocolo de Montreal (1987) que prohibió su producción. La sustitución por HFC explica por qué las emisiones de CFC bajan mientras las de HFC suben. La respuesta es B."},
+  {"id":78,"grado":11,"asignatura":"Ciencias Naturales","competencia":"uso del conocimiento científico","enunciado":"Los CFC (clorofluorocarbonos) fueron reemplazados por HFC (hidrofluorocarbonos) como gases refrigerantes. Los HFC se componen de carbono, hidrógeno y flúor (sin cloro).\n\n¿Qué ventaja tiene cambiar los gases tipo CFC por los gases tipo HFC?","opciones":{"A":"Los gases tipo HFC tienen potencial de destrucción del ozono (ODP) prácticamente nulo.","B":"Los gases tipo HFC no se usan en las neveras, por lo que no afectan la capa de ozono.","C":"Los gases tipo HFC son compuestos inorgánicos, por lo que no afectan la capa de ozono.","D":"Los gases tipo HFC contaminan muy poco el aire, por lo que no destruyen la estructura del O₃."},"respuesta":"A","retroalimentacion":"La ventaja principal es que los HFC, al no contener cloro, tienen un potencial de destrucción del ozono (ODP) prácticamente nulo (A). El cloro es el elemento responsable de la destrucción catalítica del ozono en los CFC. B es incorrecta (los HFC sí se usan en neveras); C es incorrecta (son compuestos orgánicos); D simplifica incorrectamente el mecanismo."},
+  {"id":79,"grado":11,"asignatura":"Ciencias Naturales","competencia":"uso del conocimiento científico","enunciado":"El consumo de tabaco libera sustancias tóxicas al ambiente, afectando tanto a fumadores como a personas cercanas. Las gráficas muestran tasas de mortalidad más altas en fumadores para enfermedades cardíacas, circulatorias, cáncer y cáncer de pulmón comparadas con no fumadores.\n\nSe proponen dos medidas:\n• Medida 1: campañas educativas para reducir el consumo de tabaco.\n• Medida 2: tratamiento médico exclusivo para personas con enfermedades respiratorias.\n\n¿Cuál es la mejor evaluación de estas medidas?","opciones":{"A":"La medida 2 es más adecuada, porque actúa directamente sobre las enfermedades una vez aparecen.","B":"La medida 1 es más adecuada, porque reduce la exposición a contaminantes y previene efectos en la salud.","C":"Ambas medidas son equivalentes, porque la mortalidad no depende del consumo de tabaco.","D":"Ninguna medida es necesaria, porque el tabaquismo solo afecta a quienes consumen directamente."},"respuesta":"B","retroalimentacion":"La prevención (Medida 1) es más eficaz que el tratamiento (Medida 2) porque actúa antes de que aparezca el daño. Además, las campañas educativas reducen la exposición de fumadores Y no fumadores (fumadores pasivos). La Medida 2 solo trata las consecuencias ya manifestadas. C y D contradicen la evidencia de las gráficas."},
+  {"id":80,"grado":11,"asignatura":"Ciencias Naturales","competencia":"explicación de fenómenos","enunciado":"En una zona cercana a una vía principal y a varios establecimientos nocturnos, los habitantes reportan dificultades para dormir, aumento del estrés y problemas de concentración en estudiantes.\n\n¿Cuál es la mejor explicación de esta problemática?","opciones":{"A":"Se trata de contaminación sonora causada por actividades humanas que afectan la salud y el bienestar.","B":"Es contaminación lumínica producida por el exceso de iluminación en espacios urbanos.","C":"Corresponde a contaminación química debido a la presencia de gases en el ambiente.","D":"Es contaminación térmica originada por el aumento de temperatura en la zona."},"respuesta":"A","retroalimentacion":"Los síntomas descritos (dificultad para dormir, estrés, problemas de concentración) son consecuencias típicas de la contaminación sonora, causada por el ruido del tráfico y los establecimientos nocturnos. La contaminación lumínica (B) afecta ritmos circadianos pero el contexto señala ruido. C y D no corresponden a los síntomas descritos."},
+  {"id":81,"grado":11,"asignatura":"Ciencias Naturales","competencia":"uso del conocimiento científico","enunciado":"En una región cercana a una mina se detectó acumulación de residuos radiactivos en fuentes de agua y suelos, con efectos negativos en organismos de la zona.\n\n¿Cuál sería la estrategia más adecuada para reducir el impacto ambiental?","opciones":{"A":"Diluir los residuos en mayores cantidades de agua para disminuir su concentración.","B":"Aislar y manejar los residuos mediante protocolos especializados de seguridad.","C":"Enterrar los residuos cerca de la mina para evitar su transporte.","D":"Quemar los residuos para impedir su acumulación en el suelo."},"respuesta":"B","retroalimentacion":"Los residuos radiactivos requieren manejo especializado bajo protocolos de seguridad radiológica (B). Diluirlos (A) no elimina la radioactividad; enterrarlos sin aislamiento (C) contamina suelos y aguas subterráneas; quemarlos (D) contamina la atmósfera con partículas radiactivas. Solo el aislamiento y manejo técnico controlado es una estrategia segura."},
+  {"id":82,"grado":11,"asignatura":"Ciencias Naturales","competencia":"indagación","enunciado":"Una comunidad rural analiza dos alternativas energéticas: construir una planta termoeléctrica basada en carbón o instalar paneles solares para abastecer varias viviendas.\n\n¿Cuál aspecto es más importante considerar al comparar el impacto ambiental de estas alternativas?","opciones":{"A":"La cantidad de energía consumida por cada vivienda durante el día.","B":"El costo inicial de instalación sin considerar efectos ambientales.","C":"Las emisiones contaminantes y el uso sostenible de los recursos naturales.","D":"La distancia entre las viviendas y la fuente de generación eléctrica."},"respuesta":"C","retroalimentacion":"El criterio central para comparar el impacto ambiental es evaluar las emisiones contaminantes y la sostenibilidad del recurso (C). La termoeléctrica a carbón emite CO₂ y usa un recurso no renovable; los paneles solares no emiten y usan energía renovable. A, B y D son consideraciones técnicas o económicas, no ambientales."},
+
+  // ══ SEGUNDO PERIODO — FÍSICA (Ciencias Naturales) ══
+  {"id":83,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento parabólico","enunciado":"En un movimiento parabólico, el movimiento que se presenta en el eje horizontal es:","opciones":{"A":"Movimiento uniformemente acelerado.","B":"Caída libre.","C":"Movimiento rectilíneo uniforme.","D":"Movimiento circular uniforme."},"respuesta":"C","retroalimentacion":"En el movimiento parabólico, el eje horizontal no tiene aceleración (se ignora la resistencia del aire). Por tanto, la velocidad horizontal es constante y el movimiento es RECTILÍNEO UNIFORME (MRU). El eje vertical sí tiene aceleración (gravedad), lo que corresponde a caída libre. Esta es la base del análisis vectorial del movimiento proyectil."},
+  {"id":84,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento parabólico","enunciado":"En un movimiento parabólico, el movimiento que ocurre en el eje vertical corresponde a:","opciones":{"A":"Movimiento rectilíneo uniforme.","B":"Movimiento circular uniforme.","C":"Caída libre.","D":"Movimiento armónico simple."},"respuesta":"C","retroalimentacion":"En el eje vertical del movimiento parabólico actúa la gravedad (g ≈ 9.8 m/s²), lo que genera una aceleración constante hacia abajo. Esto es exactamente CAÍDA LIBRE: movimiento uniformemente acelerado en la dirección vertical. En el eje horizontal, en cambio, no hay aceleración (MRU)."},
+  {"id":85,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento parabólico","enunciado":"Cuando un proyectil alcanza su altura máxima en un movimiento parabólico:","opciones":{"A":"La velocidad horizontal es cero.","B":"La velocidad vertical es cero.","C":"La aceleración es cero.","D":"La velocidad total desaparece."},"respuesta":"B","retroalimentacion":"En la altura máxima, la componente vertical de la velocidad es cero (el proyectil deja de subir y comienza a bajar). La velocidad horizontal SIEMPRE se mantiene constante y diferente de cero (en ausencia de fricción). La aceleración (gravedad) nunca es cero durante el vuelo. Por tanto, la velocidad total no desaparece, solo su componente vertical."},
+  {"id":86,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento parabólico","enunciado":"Un proyectil es lanzado horizontalmente desde una altura de 45 m. Si g = 10 m/s², ¿cuánto tiempo aproximado tarda en llegar al suelo?","opciones":{"A":"3 s","B":"6 s","C":"9 s","D":"12 s"},"respuesta":"A","retroalimentacion":"En el eje vertical: h = ½·g·t². Despejando t: t = √(2h/g) = √(2×45/10) = √9 = 3 s. La velocidad horizontal inicial no afecta el tiempo de caída. La respuesta es 3 segundos (A)."},
+  {"id":87,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento parabólico","enunciado":"Dos pelotas se sueltan desde la misma altura: una cae verticalmente y la otra se lanza horizontalmente. Si se desprecia la resistencia del aire:\n¿Cuál llega primero al suelo?","opciones":{"A":"La pelota lanzada horizontalmente tarda más.","B":"La pelota que cae verticalmente llega primero.","C":"Ambas llegan al mismo tiempo.","D":"Ninguna llega simultáneamente."},"respuesta":"C","retroalimentacion":"El tiempo de caída depende únicamente de la altura y la gravedad: t = √(2h/g). Como ambas pelotas están a la misma altura y la gravedad actúa igual en el eje vertical para las dos, llegan al suelo al mismo tiempo (C). La velocidad horizontal no afecta el movimiento vertical. Este es un resultado clásico de la independencia de los ejes en el movimiento parabólico."},
+  {"id":88,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento circular","enunciado":"Una rueda gira con movimiento circular uniforme realizando 120 revoluciones en 1 minuto.\n\n¿Cuál es la frecuencia del movimiento?","opciones":{"A":"0,5 Hz","B":"1 Hz","C":"2 Hz","D":"4 Hz"},"respuesta":"C","retroalimentacion":"La frecuencia es el número de revoluciones por segundo. Convirtiendo: 120 rev/min ÷ 60 s/min = 2 rev/s = 2 Hz. La respuesta es C. Recordar: frecuencia (Hz) = revoluciones por segundo. El período sería T = 1/f = 1/2 = 0,5 s."},
+  {"id":89,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento circular","enunciado":"Una partícula describe un movimiento circular uniforme de radio 2 m con rapidez constante de 8 m/s.\n\n¿Cuál es la aceleración centrípeta de la partícula?","opciones":{"A":"8 m/s²","B":"16 m/s²","C":"24 m/s²","D":"32 m/s²"},"respuesta":"D","retroalimentacion":"La aceleración centrípeta se calcula con: ac = v²/r = (8)²/2 = 64/2 = 32 m/s². La aceleración centrípeta siempre apunta hacia el centro del círculo. La respuesta es D (32 m/s²)."},
+  {"id":90,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — dinámica","enunciado":"Una caja de 20 kg es empujada horizontalmente con una fuerza de 120 N. El coeficiente de fricción cinética es 0,3 y g = 10 m/s².\n\n¿Cuál es la aceleración de la caja?","opciones":{"A":"1 m/s²","B":"2 m/s²","C":"3 m/s²","D":"6 m/s²"},"respuesta":"C","retroalimentacion":"Fuerza de fricción = μ × m × g = 0,3 × 20 × 10 = 60 N. Fuerza neta = 120 − 60 = 60 N. Aceleración = F_neta / m = 60 / 20 = 3 m/s². La respuesta es C. Se aplica la Segunda Ley de Newton: F_neta = m × a."},
+  {"id":91,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — dinámica","enunciado":"Dos bloques de masas 4 kg y 6 kg están unidos por una cuerda y son halados horizontalmente por una fuerza de 50 N sobre una superficie sin fricción.\n\n¿Cuál es la tensión en la cuerda que une los bloques?","opciones":{"A":"10 N","B":"20 N","C":"30 N","D":"50 N"},"respuesta":"B","retroalimentacion":"La aceleración del sistema: a = F_total / m_total = 50 / (4+6) = 5 m/s². La tensión en la cuerda actúa sobre el bloque de 4 kg: T = m₁ × a = 4 × 5 = 20 N. La respuesta es B (20 N). Comprobación: la fuerza neta sobre el bloque de 6 kg es 50 − 20 = 30 N = 6 × 5 ✓."},
+
+  // ══ SEGUNDO PERIODO — QUÍMICA ORGÁNICA (Ciencias Naturales) ══
+  {"id":92,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — compuestos orgánicos","enunciado":"Se analizan tres compuestos orgánicos:\n• Compuesto A: CH₃–CH₂–OH (Alcohol)\n• Compuesto B: CH₃–COOH (Ácido carboxílico)\n• Compuesto C: CH₃–CH₂–CH₃ (Alcano)\n\n¿Cuál de las siguientes afirmaciones es correcta respecto a sus propiedades?","opciones":{"A":"Todos presentan fuerzas intermoleculares similares por tener enlaces covalentes.","B":"El compuesto C tiene mayor punto de ebullición por su masa molecular y estabilidad estructural.","C":"El compuesto B presenta mayor punto de ebullición por sus interacciones intermoleculares más intensas.","D":"El compuesto A es menos soluble en agua debido a su cadena carbonada y polaridad intermedia."},"respuesta":"C","retroalimentacion":"Los ácidos carboxílicos (compuesto B) tienen puntos de ebullición muy altos porque forman dímeros mediante dobles puentes de hidrógeno entre dos moléculas, lo cual requiere mucha más energía para separarse. Los alcoholes (A) también forman puentes H pero solo simples. Los alcanos (C) solo tienen fuerzas de Van der Waals, por lo que tienen los menores puntos de ebullición."},
+  {"id":93,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — compuestos orgánicos","enunciado":"Una empresa busca un solvente con las siguientes características:\n• Baja solubilidad en agua\n• Alta volatilidad\n• Baja reactividad\n\n¿Cuál compuesto cumple mejor las condiciones y por qué?","opciones":{"A":"Alcohol, porque puede interactuar con diferentes sustancias y presenta solubilidad moderada en agua.","B":"Éter, porque presenta baja polaridad, limitada interacción con el agua y alta volatilidad relativa.","C":"Ácido carboxílico, porque tiene estabilidad estructural y puede formar interacciones intermoleculares fuertes.","D":"Amida, porque presenta alta estabilidad química y resistencia a cambios en diferentes condiciones."},"respuesta":"B","retroalimentacion":"Los éteres (R–O–R') tienen baja polaridad (sin grupos –OH), lo que les da baja solubilidad en agua, alta volatilidad (bajos puntos de ebullición) y baja reactividad química. El alcohol (A) es soluble en agua; el ácido carboxílico (C) es reactivo y miscible; la amida (D) tiene alta estabilidad pero no es volátil. El éter es el solvente industrial ideal para estas especificaciones."},
+  {"id":94,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — compuestos orgánicos","enunciado":"En las moléculas orgánicas, los átomos de carbono se clasifican según el número de carbonos con los que están enlazados:\n• Primario: enlazado a 1 carbono\n• Secundario: enlazado a 2 carbonos\n• Terciario: enlazado a 3 carbonos\n• Cuaternario: enlazado a 4 carbonos\n\n¿En cuál de los siguientes compuestos existe un carbono de tipo cuaternario?","opciones":{"A":"1-penteno","B":"2-metil-2-butanol","C":"2,2-dimetilhexano","D":"2-propanona"},"respuesta":"C","retroalimentacion":"En el 2,2-dimetilhexano, el carbono en la posición 2 está enlazado a: el carbono 1, el carbono 3, y dos grupos metilo (–CH₃). Total: 4 enlaces C–C → carbono CUATERNARIO. En el 2-metil-2-butanol (B), el carbono central está enlazado a 3 carbonos y 1 oxígeno (no es carbono cuaternario). El 1-penteno y la propanona tampoco tienen carbono cuaternario."},
+  {"id":95,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — compuestos orgánicos","enunciado":"Un grupo de estudiantes analizó las propiedades de tres tipos de compuestos orgánicos y construyó una gráfica de punto de ebullición vs. número de carbonos en la cadena. Encontraron que para el mismo número de carbonos, el orden de mayor a menor punto de ebullición es: ácidos carboxílicos > alcoholes > alcanos.\n\n¿Cuál explicación interpreta correctamente este comportamiento?","opciones":{"A":"El aumento del punto de ebullición se debe principalmente al incremento de la masa molecular, independientemente del grupo funcional.","B":"Las diferencias entre las curvas se explican por el tipo de fuerzas intermoleculares: más intensas en ácidos, intermedias en alcoholes y débiles en alcanos.","C":"El comportamiento se debe a la presencia de enlaces covalentes más fuertes en los ácidos carboxílicos que en los otros compuestos.","D":"Las variaciones en el punto de ebullición se deben a cambios en la reactividad química al aumentar la longitud de la cadena."},"respuesta":"B","retroalimentacion":"Las fuerzas intermoleculares determinan el punto de ebullición: los ácidos carboxílicos forman dímeros con dobles puentes de hidrógeno (muy intensas), los alcoholes forman puentes de hidrógeno simples (intermedias), y los alcanos solo tienen fuerzas de dispersión de London (débiles). A mayor intensidad de fuerzas intermoleculares, mayor energía necesaria para separar las moléculas y mayor punto de ebullición."},
+  {"id":96,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — compuestos orgánicos","enunciado":"El glicerol (propano-1,2,3-triol) es ampliamente utilizado como crioprotector en la conservación de células y tejidos a temperaturas extremadamente bajas (nitrógeno líquido).\n\n¿Cuál de las siguientes explicaciones relaciona mejor las propiedades del glicerol con su función como anticongelante celular?","opciones":{"A":"Su alta polaridad y capacidad de formar múltiples puentes de hidrógeno le permiten interactuar con el agua, disminuyendo la formación de estructuras cristalinas.","B":"Su baja masa molecular y estructura lineal facilitan su difusión en la célula, evitando cambios en el estado físico del agua.","C":"Su carácter orgánico y estabilidad química reducen la reactividad del medio, evitando daños en las células durante el enfriamiento.","D":"Su elevada viscosidad y densidad impiden el movimiento de las moléculas de agua, evitando su congelación."},"respuesta":"A","retroalimentacion":"El glicerol tiene tres grupos –OH (hidroxilos) que le permiten formar múltiples puentes de hidrógeno con el agua. Al interactuar intensamente con las moléculas de agua, interrumpe la formación de la red cristalina del hielo, bajando el punto de congelación. Esto protege las células del daño mecánico causado por los cristales de hielo. La opción A es la más completa y correcta desde el punto de vista fisicoquímico."},
+
+  // ══ 2025 1P — LECTURA CRÍTICA ══
+  {"id":97,"grado":11,"asignatura":"Lectura Crítica","competencia":"crítico","enunciado":"Lee el siguiente texto y responde:\n\nA mucha gente le gusta ver en los cuadros lo que también le gustaría ver en la realidad. Se trata de una preferencia perfectamente comprensible. A todos nos atrae lo bello en la naturaleza y agradecemos a los artistas que lo recojan en sus obras. Esos mismos artistas no nos censurarían por nuestros gustos. Cuando el gran artista flamenco Rubens dibujó a su hijo, estaba orgulloso de sus agradables acciones y deseaba que también nosotros admiráramos al pequeño. Pero esta inclinación a los temas bonitos y atractivos puede convertirse en nociva si nos conduce a rechazar obras que representan asuntos menos agradables. El gran pintor alemán Alberto Durero seguramente dibujó a su madre con tanta devoción y cariño como Rubens a su hijo. Su verista estudio de la vejez y la decrepitud puede producirnos tan viva impresión que nos haga apartar los ojos de él y, sin embargo, si reaccionamos contra esta primera aversión, quedaremos recompensados con creces, pues el dibujo de Durero, en su tremenda sinceridad, es una gran obra. En efecto, de pronto descubrimos que la hermosura de un cuadro no reside realmente en la belleza de su tema. No sé si los golfillos que el pintor español Murillo se complacía en pintar eran estrictamente bellos o no, pero tal como fueron pintados por él, poseen desde luego gran encanto.\n(Gombrich, E. H. La historia del arte)\n\n¿Cuál de los siguientes títulos podría ser el más adecuado para el texto anterior?","opciones":{"A":"La representación de la belleza en el arte.","B":"En defensa del mal gusto en el arte.","C":"El arte como modelo de la realidad.","D":"Rubens, Durero y Murillo: el arte de la pintura."},"respuesta":"A","retroalimentacion":"El texto de Gombrich desarrolla la idea de que la belleza de una obra de arte no reside en la belleza del tema representado, sino en la forma en que el artista lo plasma. Analiza cómo diferentes artistas (Rubens, Durero, Murillo) representan distintos temas y todos producen obras de gran calidad. El título A, 'La representación de la belleza en el arte', captura mejor esta idea central. Las otras opciones son parciales o incorrectas: B invierte el argumento; C sugiere un enfoque realista que el texto no defiende; D solo menciona los nombres sin el concepto principal."},
+  {"id":98,"grado":11,"asignatura":"Lectura Crítica","competencia":"inferencial","enunciado":"Lee el siguiente texto y responde:\n\nEL ASALTO\n\nLa casa suntuosa en Leblon está guardada por un mastín de terrible semblante, que duerme con los ojos abiertos; o quizás no duerma, de tan vigilante que es. Por eso, la familia vive tranquila, y nunca hubo noticia de asalto a una residencia tan bien protegida. Hasta la semana pasada. La noche del jueves, un hombre logró abrir el pesado portal de hierro y penetrar en el jardín. Iba a hacer lo mismo con la puerta de la casa, cuando el perro, que astutamente lo había dejado acercarse (para arrancarle toda la ilusión conquistada), se lanza hacia él y lo acomete en la pierna izquierda. El ladrón quiso sacar el revólver, pero no hubo ni tiempo para ello. Cayendo al suelo, bajo las patas del enemigo, le suplicó con los ojos que lo dejase vivir y con la boca prometió que jamás intentaría asaltar aquella casa.\n\nHabló por lo bajo para no despertar a los residentes, temiendo que la situación pudiera agravarse. El animal pareció entender la súplica del ladrón y lo dejó salir en un estado lamentable. En el jardín quedó un trozo de pantalón. Al día siguiente, la criada no comprendió por qué razón una voz, al teléfono, diciendo que era de Salud Pública, preguntaba si el perro estaba vacunado. En ese momento, el perro, que estaba al lado de la doméstica, agitó la cola, afirmativamente.\n\nLa voz que narra el texto anterior corresponde a:","opciones":{"A":"Un narrador ajeno a los hechos.","B":"Al ladrón que resultó herido.","C":"A quien habla a través del teléfono.","D":"Al pensamiento del mastín."},"respuesta":"A","retroalimentacion":"La narración de 'El Asalto' está hecha por un narrador en tercera persona, externo y ajeno a los hechos. Este narrador conoce los pensamientos y acciones de los personajes (el ladrón, el perro, la criada) sin ser parte de la historia. Se evidencia en frases como 'el perro, que astutamente lo había dejado acercarse' —el narrador interpreta los comportamientos— y en el final irónico donde el perro 'agitó la cola, afirmativamente'. Es un narrador omnisciente externo. La respuesta es A."},
+
+  // ══ 2025 1P — MATEMÁTICAS ══
+  {"id":99,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento — razones y proporciones","enunciado":"La suma de 3 números enteros es 27. La razón entre el primero y el segundo es 2/3 y la del segundo al tercero es 3/4. ¿Cuál es el tercer número?","opciones":{"A":"15","B":"18","C":"9","D":"12"},"respuesta":"D","retroalimentacion":"Llamemos los tres números: primero = 2k, segundo = 3k (pues primero/segundo = 2/3). Luego segundo/tercero = 3/4, entonces 3k/tercero = 3/4, de donde tercero = 4k. La suma: 2k + 3k + 4k = 9k = 27, por lo tanto k = 3. El tercer número = 4×3 = 12. Respuesta: D."},
+  {"id":100,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento — porcentajes","enunciado":"Cuando al tanque de gasolina de un avión le falta el 45% de su capacidad para llenarse, contiene 250 litros más que cuando estaba lleno al 45% de su capacidad. ¿Cuál es la capacidad del tanque en litros?","opciones":{"A":"2500","B":"2250","C":"2300","D":"4500"},"respuesta":"A","retroalimentacion":"Si la capacidad total es C:\n• Cuando le falta el 45% → tiene el 55%: 0,55C litros.\n• Cuando está lleno al 45%: 0,45C litros.\nDiferencia: 0,55C − 0,45C = 0,10C = 250 litros.\nEntonces C = 250 / 0,10 = 2500 litros. Respuesta: A."},
+  {"id":101,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento — tiempo y trabajo","enunciado":"Cuando a una obra le falta el 40% de su ejecución, el tiempo de trabajo invertido es 26 días más que cuando llevaba el 40% ejecutado. Si las condiciones se mantienen, ¿cuál es el tiempo total en días de la obra?","opciones":{"A":"65","B":"104","C":"130","D":"156"},"respuesta":"C","retroalimentacion":"Sea T el tiempo total.\n• Con 40% ejecutado → tiempo invertido = 0,40T.\n• Con 60% ejecutado (le falta 40%) → tiempo = 0,60T.\nDiferencia: 0,60T − 0,40T = 0,20T = 26 días.\nT = 26 / 0,20 = 130 días. Respuesta: C."},
+  {"id":102,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento — porcentajes","enunciado":"En un salón de clase, el número de niños corresponde al 60% del total y hay 10 niños más que niñas. ¿Cuál es el número total de alumnos?","opciones":{"A":"60","B":"55","C":"50","D":"45"},"respuesta":"C","retroalimentacion":"Sea n el total: niños = 0,6n; niñas = 0,4n.\nCondición: 0,6n − 0,4n = 10 → 0,2n = 10 → n = 50. Respuesta: C."},
+  {"id":103,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento — sistemas de ecuaciones","enunciado":"El doble de la edad de A excede en 50 a la edad de B, y 1/4 de la edad de B es 35 años menos que la edad de A. ¿Cuáles son las edades de A y B respectivamente?","opciones":{"A":"60 y 50","B":"45 y 40","C":"55 y 60","D":"50 y 60"},"respuesta":"B","retroalimentacion":"Sistema:\n• 2A = B + 50 → B = 2A − 50\n• B/4 = A − 35 → B = 4A − 140\nIgualando: 2A − 50 = 4A − 140 → 90 = 2A → A = 45.\nB = 2(45) − 50 = 40. Edades: A = 45 y B = 40. Respuesta: B."},
+  {"id":104,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento — álgebra","enunciado":"Algebraicamente, la resolución de un sistema de ecuaciones lineales de 2×2 representa:","opciones":{"A":"Una pareja ordenada","B":"Un punto","C":"Un binomio","D":"2 términos dependientes"},"respuesta":"A","retroalimentacion":"La solución de un sistema de dos ecuaciones con dos variables es un conjunto de valores (x, y) que satisfacen simultáneamente ambas ecuaciones. Algebraicamente esto se expresa como una pareja ordenada (x, y). Geométricamente corresponde a un punto de intersección, pero la representación algebraica es la pareja ordenada. Respuesta: A."},
+  {"id":105,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento — geometría","enunciado":"Sean A, B y C tres puntos colineales tales que B está entre A y C. Si se sabe que AC = 30 y 2AB = 3BC, ¿cuánto mide AB?","opciones":{"A":"10","B":"12","C":"18","D":"24"},"respuesta":"C","retroalimentacion":"Como B está entre A y C: AB + BC = 30.\nDe 2AB = 3BC → AB = (3/2)BC.\nSustituyendo: (3/2)BC + BC = 30 → (5/2)BC = 30 → BC = 12.\nAB = 30 − 12 = 18. Verificación: 2×18 = 36 = 3×12 ✓. Respuesta: C."},
+  {"id":106,"grado":11,"asignatura":"Matemáticas","competencia":"razonamiento — funciones cuadráticas","enunciado":"¿Cuál es el vértice de la parábola representada por la función f(x) = −x² + 4x + 5?","opciones":{"A":"(2, 9)","B":"(−2, 9)","C":"(2, 1)","D":"(−2, −1)"},"respuesta":"A","retroalimentacion":"Para f(x) = ax² + bx + c, el vértice tiene x_v = −b/(2a).\na = −1, b = 4: x_v = −4/(2·(−1)) = 2.\nf(2) = −4 + 8 + 5 = 9. Vértice: (2, 9). Respuesta: A."},
+
+  // ══ 2025 1P — INGLÉS ══
+  {"id":107,"grado":11,"asignatura":"Inglés","competencia":"literal","enunciado":"Read the following text and answer:\n\nMany major cities in the world today have large populations of people who have recently arrived; they have emigrated from other countries. Perhaps you, too, have left a familiar place to come to a new city or a new country. Or you may live in a city where there are large numbers of newcomers. Adapting to a new place forces people to seek out new friends, face new problems, and often learn a new language.\n\nThe underlined word 'who' is related to:","opciones":{"A":"Cities.","B":"People.","C":"Major.","D":"Countries."},"respuesta":"B","retroalimentacion":"'Who' is a relative pronoun referring to 'people' in the phrase 'large populations of people who have recently arrived.' The clause 'who have recently arrived' describes those people. Answer: B."},
+  {"id":108,"grado":11,"asignatura":"Inglés","competencia":"literal","enunciado":"Read the following text and answer:\n\nMany major cities in the world today have large populations of people who have recently arrived; they have emigrated from other countries. Perhaps you, too, have left a familiar place to come to a new city or a new country. Or you may live in a city where there are large numbers of newcomers. Adapting to a new place forces people to seek out new friends, face new problems, and often learn a new language.\n\nThe underlined words 'seek out' can be replaced by:","opciones":{"A":"Give up.","B":"Look for.","C":"Take care.","D":"Find out."},"respuesta":"B","retroalimentacion":"'Seek out' means to search for someone or something. The closest equivalent is 'look for' (B), which also means to search for something. 'Give up' means to abandon; 'take care' means to be careful; 'find out' means to discover information. Answer: B."},
+  {"id":109,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Read the following text and answer:\n\nMany major cities in the world today have large populations of people who have recently arrived; they have emigrated from other countries. Perhaps you, too, have left a familiar place to come to a new city or a new country. Or you may live in a city where there are large numbers of newcomers. Adapting to a new place forces people to seek out new friends, face new problems, and often learn a new language.\n\nAccording to the text:","opciones":{"A":"People are forced to leave their native countries.","B":"Major cities of the world have received many visitors.","C":"People have immigrated to other countries due to overpopulation.","D":"Living in a new place implies many changes for immigrants."},"respuesta":"D","retroalimentacion":"The text states 'adapting to a new place forces people to seek out new friends, face new problems, and often learn a new language.' This implies living in a new place involves many changes. Option A is wrong (no one forces them to leave); B is wrong (residents, not visitors); C is wrong (overpopulation not mentioned). Answer: D."},
+  {"id":110,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Choose the correct connector to complete the sentence:\n\nThe movie was interesting, _______ it was a bit long.","opciones":{"A":"so","B":"because","C":"although","D":"and"},"respuesta":"C","retroalimentacion":"The sentence expresses a contrast: the movie was interesting (positive) BUT it was a bit long (limitation). 'Although' (C) is the correct connector to express contrast. 'So' indicates result; 'because' indicates cause; 'and' simply adds ideas. Answer: C."},
+  {"id":111,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Choose the correct connector to complete the sentence:\n\nYou should bring a jacket, _______ it might get cold later.","opciones":{"A":"and","B":"because","C":"if","D":"although"},"respuesta":"B","retroalimentacion":"'It might get cold later' gives the reason for bringing a jacket. 'Because' (B) introduces a reason or cause. 'If' creates a conditional; 'although' introduces contrast; 'and' simply adds ideas without causation. Answer: B."},
+  {"id":112,"grado":11,"asignatura":"Inglés","competencia":"literal","enunciado":"Read the following text and answer:\n\nA Weekend Adventure\n\nLast weekend, Lucy and her friends went on a hiking trip in the mountains. They woke up early on Saturday morning and packed their backpacks with food, water, and a map. After driving for two hours, they finally reached the trailhead. The weather was perfect for a hike—sunny and cool, not too hot. They started walking at 10 AM and stopped for lunch at noon near a beautiful waterfall. After lunch, they continued their hike and reached the top by 4 PM. They took some pictures and enjoyed the breathtaking view before heading back down. By the time they returned to their car, it was already dark. Exhausted but happy, they drove home and talked about their next adventure.\n\nWhy did Lucy and her friends wake up early on Saturday morning?","opciones":{"A":"To have breakfast at home.","B":"To go hiking in the mountains.","C":"To meet other friends.","D":"To prepare for a camping trip."},"respuesta":"B","retroalimentacion":"The text directly states: 'Last weekend, Lucy and her friends went on a hiking trip in the mountains. They woke up early on Saturday morning and packed their backpacks.' They woke up early to go hiking. Answer: B."},
+  {"id":113,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Read the following text and answer:\n\nA Weekend Adventure\n\nLast weekend, Lucy and her friends went on a hiking trip in the mountains. They woke up early on Saturday morning and packed their backpacks with food, water, and a map. After driving for two hours, they finally reached the trailhead. The weather was perfect for a hike—sunny and cool, not too hot. They started walking at 10 AM and stopped for lunch at noon near a beautiful waterfall. After lunch, they continued their hike and reached the top by 4 PM. They took some pictures and enjoyed the breathtaking view before heading back down. By the time they returned to their car, it was already dark. Exhausted but happy, they drove home and talked about their next adventure.\n\nWhat can we infer about the weather during their hike?","opciones":{"A":"It was too hot for hiking.","B":"It was rainy and unpleasant.","C":"The weather was ideal for hiking.","D":"It was too cold to hike."},"respuesta":"C","retroalimentacion":"The text says 'The weather was perfect for a hike—sunny and cool, not too hot.' The word 'perfect' directly supports that the weather was ideal (C). Answer: C."},
+  {"id":114,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Read the following text and answer:\n\nA Weekend Adventure\n\nLast weekend, Lucy and her friends went on a hiking trip in the mountains. They woke up early on Saturday morning and packed their backpacks with food, water, and a map. After driving for two hours, they finally reached the trailhead. The weather was perfect for a hike—sunny and cool, not too hot. They started walking at 10 AM and stopped for lunch at noon near a beautiful waterfall. After lunch, they continued their hike and reached the top by 4 PM. They took some pictures and enjoyed the breathtaking view before heading back down. By the time they returned to their car, it was already dark. Exhausted but happy, they drove home and talked about their next adventure.\n\nWhy do you think they stopped for lunch at the waterfall?","opciones":{"A":"They wanted to swim in the waterfall.","B":"They were tired and needed to rest.","C":"They wanted to take a break and enjoy the view.","D":"They got lost and needed directions."},"respuesta":"C","retroalimentacion":"The text mentions they stopped 'near a beautiful waterfall' — the word 'beautiful' suggests the scenic appeal. It was noon (a natural lunch time) and the waterfall provided a pleasant spot. Option C best combines the timing and the attractive setting. There is no mention of swimming (A), excessive tiredness (B), or being lost (D). Answer: C."},
+  {"id":115,"grado":11,"asignatura":"Inglés","competencia":"crítico","enunciado":"Read the following text and answer:\n\nA Weekend Adventure\n\nLast weekend, Lucy and her friends went on a hiking trip in the mountains. They woke up early on Saturday morning and packed their backpacks with food, water, and a map. After driving for two hours, they finally reached the trailhead. The weather was perfect for a hike—sunny and cool, not too hot. They started walking at 10 AM and stopped for lunch at noon near a beautiful waterfall. After lunch, they continued their hike and reached the top by 4 PM. They took some pictures and enjoyed the breathtaking view before heading back down. By the time they returned to their car, it was already dark. Exhausted but happy, they drove home and talked about their next adventure.\n\nWhat might have happened if they had arrived at the top later?","opciones":{"A":"They would have decided to hike another mountain.","B":"They would have found more people at the top.","C":"They would have stayed longer at the waterfall.","D":"They wouldn't have had enough time to enjoy the view."},"respuesta":"D","retroalimentacion":"They reached the top at 4 PM and it was already dark when they returned. If they had arrived later, darkness would have come sooner, leaving less time to enjoy the breathtaking view. Option D is the logical inference. Options A, B, and C have no textual support. Answer: D."},
+  {"id":116,"grado":11,"asignatura":"Inglés","competencia":"inferencial","enunciado":"Read the following text and answer:\n\nA Weekend Adventure\n\nLast weekend, Lucy and her friends went on a hiking trip in the mountains. They woke up early on Saturday morning and packed their backpacks with food, water, and a map. After driving for two hours, they finally reached the trailhead. The weather was perfect for a hike—sunny and cool, not too hot. They started walking at 10 AM and stopped for lunch at noon near a beautiful waterfall. After lunch, they continued their hike and reached the top by 4 PM. They took some pictures and enjoyed the breathtaking view before heading back down. By the time they returned to their car, it was already dark. Exhausted but happy, they drove home and talked about their next adventure.\n\nWhy were they exhausted but happy when they returned home?","opciones":{"A":"They got lost and were tired from finding their way.","B":"They had been hiking all day and enjoyed the adventure.","C":"They didn't have enough food or water during the hike.","D":"They spent too much time taking pictures."},"respuesta":"B","retroalimentacion":"They had been hiking since 10 AM and it was dark when they returned — a full day of activity. The happiness came from enjoying the adventure (waterfall, breathtaking view, next adventure plans). Option B captures both exhaustion (hiking all day) and happiness (enjoyed the adventure). Answer: B."},
+
+  // ══ 2025 1P — CIENCIAS SOCIALES ══
+  {"id":117,"grado":11,"asignatura":"Ciencias Sociales","competencia":"literal","enunciado":"Lee el siguiente texto y responde:\n\nLa diversidad étnica y las relaciones interculturales han sido aspectos fundamentales en el desarrollo de las sociedades humanas. Desde tiempos inmemoriales, las interacciones entre diferentes grupos étnicos y culturales han generado tanto avances como conflictos. En la era moderna, la globalización ha intensificado estos intercambios, destacando la necesidad de comprender y gestionar la diversidad de manera efectiva. Los desafíos incluyen la superación de prejuicios y estereotipos, la promoción de la equidad y la inclusión, y la creación de políticas que favorezcan la convivencia armoniosa entre las diversas culturas.\n\n¿Cuál es el principal desafío que enfrentan las sociedades contemporáneas al intentar integrar la diversidad étnica en sus estructuras sociales?","opciones":{"A":"La persistencia de prejuicios y estereotipos.","B":"La homogeneización cultural.","C":"La falta de recursos educativos.","D":"La implementación de políticas inclusivas y equitativas."},"respuesta":"A","retroalimentacion":"El texto menciona explícitamente que 'los desafíos incluyen la superación de prejuicios y estereotipos.' Esta es una afirmación literal del texto. La persistencia de prejuicios y estereotipos es identificada como uno de los principales retos para integrar la diversidad étnica. La respuesta es A."},
+  {"id":118,"grado":11,"asignatura":"Ciencias Sociales","competencia":"inferencial","enunciado":"Lee el siguiente texto y responde:\n\nLa diversidad étnica y las relaciones interculturales han sido aspectos fundamentales en el desarrollo de las sociedades humanas. En la era moderna, la globalización ha intensificado estos intercambios, destacando la necesidad de comprender y gestionar la diversidad de manera efectiva. Los desafíos incluyen la superación de prejuicios y estereotipos, la promoción de la equidad y la inclusión, y la creación de políticas que favorezcan la convivencia armoniosa entre las diversas culturas.\n\n¿Cómo pueden las políticas de acción afirmativa contribuir a la equidad en sociedades multiculturales?","opciones":{"A":"Proporcionando oportunidades igualitarias para todos los grupos étnicos.","B":"Eliminando las diferencias culturales en el ámbito laboral.","C":"Fomentando la segregación para mantener la identidad cultural.","D":"Promoviendo la representación de minorías en diversas áreas profesionales."},"respuesta":"D","retroalimentacion":"Las políticas de acción afirmativa se definen por su enfoque en promover la representación de grupos históricamente subrepresentados (minorías) en áreas como el empleo, la educación y la vida pública. La opción D captura esta función específica. La A describe equidad en general pero no la acción afirmativa en particular. La C es opuesta al concepto. La respuesta es D."},
+  {"id":119,"grado":11,"asignatura":"Ciencias Sociales","competencia":"inferencial","enunciado":"Lee el siguiente texto y responde:\n\nLa diversidad étnica y las relaciones interculturales han sido aspectos fundamentales en el desarrollo de las sociedades humanas. Los desafíos incluyen la superación de prejuicios y estereotipos, la promoción de la equidad y la inclusión, y la creación de políticas que favorezcan la convivencia armoniosa entre las diversas culturas.\n\n¿Qué papel juega la educación intercultural en la promoción de la cohesión social en un contexto globalizado?","opciones":{"A":"Fomenta la comprensión y el respeto mutuo entre diferentes culturas.","B":"Elimina las diferencias culturales entre los estudiantes.","C":"Impone una cultura dominante sobre otras.","D":"Facilita el diálogo y la resolución pacífica de conflictos interculturales."},"respuesta":"A","retroalimentacion":"La educación intercultural busca la comprensión y el respeto mutuo entre culturas, lo cual fortalece la cohesión social. El texto menciona 'la superación de prejuicios y estereotipos' y 'la convivencia armoniosa'. La educación intercultural aborda estos retos fomentando la comprensión y el respeto (A). Eliminar diferencias (B) o imponer una cultura (C) son contrarios al enfoque intercultural. La respuesta es A."},
+  {"id":120,"grado":11,"asignatura":"Ciencias Sociales","competencia":"inferencial","enunciado":"Lee el siguiente texto y responde:\n\nLa diversidad étnica y las relaciones interculturales han sido aspectos fundamentales en el desarrollo de las sociedades humanas. En la era moderna, la globalización ha intensificado estos intercambios, destacando la necesidad de comprender y gestionar la diversidad de manera efectiva. Los desafíos incluyen la superación de prejuicios y estereotipos, la promoción de la equidad y la inclusión, y la creación de políticas que favorezcan la convivencia armoniosa entre las diversas culturas.\n\n¿Qué se puede inferir sobre la globalización y su impacto en la diversidad étnica?","opciones":{"A":"La globalización ha intensificado los intercambios culturales y la diversidad.","B":"La globalización ha reducido la importancia de la diversidad cultural.","C":"Las sociedades globalizadas experimentan menos conflictos interculturales.","D":"La necesidad de gestionar la diversidad cultural es más urgente en un mundo globalizado."},"respuesta":"D","retroalimentacion":"El texto dice 'la globalización ha intensificado estos intercambios, destacando la necesidad de comprender y gestionar la diversidad.' La opción A es literal; la D es una inferencia más profunda: que en el mundo globalizado, gestionar la diversidad se vuelve más urgente. Esta implicación va más allá de lo directamente enunciado. La respuesta es D."},
+  {"id":121,"grado":11,"asignatura":"Ciencias Sociales","competencia":"inferencial","enunciado":"Lee el siguiente texto y responde:\n\nLa diversidad étnica y las relaciones interculturales han sido aspectos fundamentales en el desarrollo de las sociedades humanas. Los desafíos incluyen la superación de prejuicios y estereotipos, la promoción de la equidad y la inclusión, y la creación de políticas que favorezcan la convivencia armoniosa entre las diversas culturas.\n\n¿Qué se puede deducir sobre los beneficios de superar los prejuicios y estereotipos?","opciones":{"A":"Promueve una convivencia más armoniosa y equitativa en sociedades diversas.","B":"Reduce la necesidad de políticas inclusivas.","C":"Incrementa la homogeneización cultural.","D":"Fomenta el enriquecimiento cultural mutuo y el desarrollo social."},"respuesta":"A","retroalimentacion":"El texto menciona explícitamente la necesidad de 'la superación de prejuicios y estereotipos' para lograr 'políticas que favorezcan la convivencia armoniosa entre las diversas culturas.' Por tanto, superar los prejuicios lleva a una convivencia más armoniosa y equitativa (A). La respuesta es A."},
+  {"id":122,"grado":11,"asignatura":"Ciencias Sociales","competencia":"inferencial","enunciado":"Lee el siguiente texto y responde:\n\nLa relación entre la sociedad y el territorio es una cuestión fundamental en el estudio de las ciencias sociales y geográficas. El territorio no solo constituye un espacio físico donde se llevan a cabo actividades humanas, sino que también refleja las dinámicas sociales, económicas y políticas de una región. La manera en que una sociedad organiza y utiliza su territorio está influenciada por factores como la distribución de los recursos naturales, la estructura económica, las políticas gubernamentales y las prácticas culturales. La planificación territorial y el desarrollo sostenible son aspectos clave para asegurar el bienestar y la equidad en las comunidades, así como para preservar el medio ambiente.\n\n¿Cómo influye la distribución de los recursos naturales en la organización territorial y el desarrollo económico de una región?","opciones":{"A":"Proporcionando ventajas comparativas para determinadas actividades económicas.","B":"Generando conflictos por el control y acceso a dichos recursos.","C":"Promoviendo una distribución equitativa de la población.","D":"Creando áreas homogéneas en términos de desarrollo."},"respuesta":"A","retroalimentacion":"Los recursos naturales (petróleo, agua, tierras fértiles, minerales) determinan en gran medida qué actividades económicas se pueden desarrollar en un territorio. Regiones ricas en ciertos recursos obtienen ventajas comparativas para especializarse en esas actividades. El texto indica que los recursos naturales son uno de los factores que determinan cómo se organiza el territorio. La respuesta es A."},
+  {"id":123,"grado":11,"asignatura":"Ciencias Sociales","competencia":"inferencial","enunciado":"Lee el siguiente texto y responde:\n\nLa manera en que una sociedad organiza y utiliza su territorio está influenciada por factores como la distribución de los recursos naturales, la estructura económica, las políticas gubernamentales y las prácticas culturales. La planificación territorial y el desarrollo sostenible son aspectos clave para asegurar el bienestar y la equidad en las comunidades, así como para preservar el medio ambiente.\n\n¿Por qué es esencial integrar las prácticas culturales en la planificación territorial?","opciones":{"A":"Para garantizar la sostenibilidad y el respeto por las comunidades locales.","B":"Para homogeneizar las prácticas culturales a nivel nacional.","C":"Para preservar el patrimonio cultural y fortalecer la identidad regional.","D":"Para impedir la influencia de culturas externas."},"respuesta":"A","retroalimentacion":"El texto señala que la planificación territorial es clave 'para asegurar el bienestar y la equidad en las comunidades.' Las prácticas culturales forman parte de los factores que influyen en cómo se organiza el territorio. Integrarlas garantiza que la planificación respete a las comunidades locales y sea sostenible. La A captura este argumento de forma más completa que la C. La respuesta es A."},
+  {"id":124,"grado":11,"asignatura":"Ciencias Sociales","competencia":"literal","enunciado":"Lee el siguiente texto y responde:\n\nLa manera en que una sociedad organiza y utiliza su territorio está influenciada por factores como la distribución de los recursos naturales, la estructura económica, las políticas gubernamentales y las prácticas culturales. La planificación territorial y el desarrollo sostenible son aspectos clave para asegurar el bienestar y la equidad en las comunidades, así como para preservar el medio ambiente.\n\n¿Qué rol juegan las políticas gubernamentales en la gestión del territorio y el desarrollo sostenible?","opciones":{"A":"Determinan la distribución de recursos y el acceso a servicios esenciales.","B":"Favorecen la concentración de la población en áreas urbanas.","C":"No tienen influencia en las prácticas de uso del suelo.","D":"Limitan las iniciativas de desarrollo local."},"respuesta":"A","retroalimentacion":"El texto menciona que 'las políticas gubernamentales' son uno de los factores que influyen en cómo una sociedad organiza su territorio. Las políticas públicas determinan cómo se distribuyen los recursos y el acceso a servicios esenciales. La opción C es claramente incorrecta según el texto. La respuesta es A."},
+  {"id":125,"grado":11,"asignatura":"Ciencias Sociales","competencia":"inferencial","enunciado":"Lee el siguiente texto y responde:\n\nLa planificación territorial y el desarrollo sostenible son aspectos clave para asegurar el bienestar y la equidad en las comunidades, así como para preservar el medio ambiente. En este contexto, es crucial entender cómo las decisiones territoriales afectan tanto a nivel local como global.\n\n¿Qué se puede deducir sobre la relación entre urbanización y sostenibilidad territorial?","opciones":{"A":"La urbanización puede provocar desequilibrios en la gestión sostenible del territorio.","B":"Las áreas urbanas siempre implementan prácticas sostenibles.","C":"La planificación territorial no afecta la sostenibilidad de las áreas urbanas.","D":"Las áreas rurales son las únicas que enfrentan desafíos de sostenibilidad."},"respuesta":"A","retroalimentacion":"El texto indica que 'las decisiones territoriales afectan tanto a nivel local como global' y que la planificación es clave para el bienestar y preservación ambiental. La urbanización acelerada puede generar desequilibrios (presión sobre recursos, contaminación) en la gestión sostenible del territorio. La B es incorrecta; C y D son contrarias al argumento del texto. La respuesta es A."},
+  {"id":126,"grado":11,"asignatura":"Ciencias Sociales","competencia":"crítico","enunciado":"Lee el siguiente texto y responde:\n\nLa planificación territorial y el desarrollo sostenible son aspectos clave para asegurar el bienestar y la equidad en las comunidades, así como para preservar el medio ambiente. En este contexto, es crucial entender cómo las decisiones territoriales afectan tanto a nivel local como global.\n\n¿Qué implica la planificación territorial en el contexto de la explotación de recursos naturales?","opciones":{"A":"Debe buscar un equilibrio entre explotación y conservación para evitar la degradación ambiental.","B":"Debe priorizar el uso sostenible de los recursos para beneficio de las generaciones futuras.","C":"Debe centrarse en maximizar la extracción de recursos sin considerar impactos ambientales.","D":"Debe restringir todas las actividades de explotación de recursos."},"respuesta":"A","retroalimentacion":"La planificación territorial orientada al desarrollo sostenible implica buscar un equilibrio entre el uso de los recursos naturales y su conservación, para evitar la degradación ambiental. La opción A refleja este enfoque equilibrado, central en el concepto de desarrollo sostenible. La C es contraria al desarrollo sostenible; D es demasiado restrictiva. La respuesta es A."},
+
+  // ══ 2025 1P — CIENCIAS NATURALES ══
+  {"id":127,"grado":11,"asignatura":"Ciencias Naturales","competencia":"ciencias naturales — ciclos biogeoquímicos","enunciado":"¿Cuál de los siguientes procesos forma parte del ciclo del agua?","opciones":{"A":"Fijación de nitrógeno","B":"Evaporación","C":"Fotosíntesis","D":"Respiración celular"},"respuesta":"B","retroalimentacion":"El ciclo del agua (ciclo hidrológico) incluye procesos como evaporación, condensación, precipitación, infiltración, transpiración y escorrentía. La evaporación (B) es uno de los procesos fundamentales. La fijación de nitrógeno (A) pertenece al ciclo del nitrógeno; la fotosíntesis (C) y la respiración celular (D) pertenecen al ciclo del carbono. Respuesta: B."},
+  {"id":128,"grado":11,"asignatura":"Ciencias Naturales","competencia":"ciencias naturales — cambio climático","enunciado":"¿Qué fenómeno se produce cuando la radiación solar es absorbida y retenida por ciertos gases en la atmósfera?","opciones":{"A":"Efecto invernadero","B":"Desgaste de la capa de ozono","C":"Erosión del suelo","D":"Fotosíntesis"},"respuesta":"A","retroalimentacion":"El efecto invernadero es el fenómeno por el cual gases atmosféricos (CO₂, metano, vapor de agua) absorben y retienen la radiación infrarroja emitida por la Tierra, manteniendo su temperatura. El problema actual es el aumento de estos gases por actividades humanas, que intensifica el efecto y causa el calentamiento global. Respuesta: A."},
+  {"id":129,"grado":11,"asignatura":"Ciencias Naturales","competencia":"ciencias naturales — cambio climático","enunciado":"En la vereda La Negra, los campesinos han decidido reemplazar la quema de residuos agrícolas por la producción de compost. ¿Cómo contribuye este cambio a la mitigación del cambio climático?","opciones":{"A":"Reduce la emisión de CO₂ y mejora la calidad del suelo.","B":"Disminuye el consumo de agua en los cultivos.","C":"Evita la propagación de plagas en los cultivos.","D":"Elimina la necesidad de fertilizantes químicos en su totalidad."},"respuesta":"A","retroalimentacion":"La quema de residuos agrícolas libera CO₂ a la atmósfera. Al sustituirla por compostaje: (1) se evita la liberación de CO₂ por combustión, y (2) los materiales orgánicos se transforman en abono que mejora la calidad del suelo. Esto contribuye a mitigar el cambio climático reduciendo emisiones. Respuesta: A."},
+  {"id":130,"grado":11,"asignatura":"Ciencias Naturales","competencia":"ciencias naturales — cambio climático","enunciado":"Observa la siguiente tabla de niveles de CO₂ en distintas zonas de una región rural:\n\n• Bosque: 380 ppm\n• Zona de cultivos de palma: 420 ppm\n• Ciudad cercana: 500 ppm\n• Río con manglares: 390 ppm\n\n¿Cuál de las siguientes afirmaciones es correcta?","opciones":{"A":"La zona de cultivos de palma absorbe más CO₂ que el bosque.","B":"La ciudad cercana presenta el nivel más alto de CO₂ debido a las emisiones industriales y de transporte.","C":"El bosque emite más CO₂ que el río con manglares.","D":"Los niveles de CO₂ son similares en todas las zonas, lo que indica un equilibrio ecológico."},"respuesta":"B","retroalimentacion":"La ciudad cercana tiene el nivel más alto de CO₂ (500 ppm) porque concentra actividades industriales y transporte vehicular. La A es incorrecta: el bosque (380 ppm) absorbe más CO₂ que los cultivos de palma (420 ppm), no al revés. La C también es incorrecta. La D es falsa ya que los valores varían. Respuesta: B."},
+  {"id":131,"grado":11,"asignatura":"Ciencias Naturales","competencia":"ciencias naturales — cambio climático","enunciado":"En un experimento se midió la temperatura del agua en un río afectado por la deforestación y se observó que era más alta en la tarde. ¿Cuál es la explicación más probable?","opciones":{"A":"El aumento de temperatura es causado por la actividad de los peces en el río.","B":"La fotosíntesis de las algas genera calor en el agua.","C":"La ausencia de árboles reduce la sombra y permite una mayor absorción de radiación solar.","D":"La evaporación del agua disminuye la temperatura del río."},"respuesta":"C","retroalimentacion":"La deforestación elimina la cubierta vegetal que proporciona sombra al río. Sin sombra, la radiación solar incide directamente sobre el agua, aumentando su temperatura especialmente en la tarde (acumulación de calor diurno). La evaporación (D) tiende a enfriar el agua. Los peces (A) y las algas (B) no son la causa principal. Respuesta: C."},
+  {"id":132,"grado":11,"asignatura":"Ciencias Naturales","competencia":"ciencias naturales — cambio climático","enunciado":"El Protocolo de Kioto (1997) estableció compromisos de reducción de emisiones para países desarrollados, mientras que el Acuerdo de París (2015) permitió que todos los países definieran sus propias metas. ¿Cuál afirmación refleja una diferencia clave entre estos dos acuerdos?","opciones":{"A":"El Acuerdo de París es más exigente porque impone reducciones obligatorias a todos los países.","B":"El Protocolo de Kioto fue más efectivo porque estableció sanciones económicas.","C":"El Acuerdo de París es más flexible porque permite que cada país establezca sus propios objetivos.","D":"Ambos acuerdos son equivalentes porque establecen compromisos idénticos."},"respuesta":"C","retroalimentacion":"La diferencia clave: el Protocolo de Kioto estableció metas obligatorias solo para países desarrollados, mientras que el Acuerdo de París adoptó un enfoque más flexible, permitiendo que cada nación definiera sus Contribuciones Nacionalmente Determinadas (NDC). Esto hace al Acuerdo de París más flexible e inclusivo. Respuesta: C."},
+  {"id":133,"grado":11,"asignatura":"Ciencias Naturales","competencia":"ciencias naturales — cambio climático","enunciado":"Una gráfica muestra que en una zona afectada por tala de bosques, la precipitación anual disminuyó de aproximadamente 1800 mm en 2000 a menos de 1000 mm en 2025. ¿Qué relación se establece entre la deforestación y la precipitación?","opciones":{"A":"La deforestación reduce la humedad en el aire, disminuyendo la precipitación.","B":"A mayor deforestación, más lluvias debido a la evaporación del suelo desnudo.","C":"La tala de árboles no tiene relación con los cambios en la precipitación.","D":"La lluvia aumenta porque el suelo sin árboles se calienta más rápido."},"respuesta":"A","retroalimentacion":"Los árboles absorben agua del suelo y la liberan a la atmósfera mediante transpiración, contribuyendo a la formación de nubes y precipitación. Al talar los bosques, se reduce la transpiración, disminuye la humedad atmosférica local y, por ende, la precipitación. La gráfica muestra exactamente esta tendencia. Respuesta: A."},
+  {"id":134,"grado":11,"asignatura":"Ciencias Naturales","competencia":"ciencias naturales — biodiversidad","enunciado":"En una región con cultivos de palma de aceite, ¿qué práctica ayudaría a reducir el impacto ambiental?","opciones":{"A":"Ampliar los monocultivos para mejorar la producción.","B":"Aumentar el uso de pesticidas para mejorar la calidad del aceite.","C":"Implementar corredores ecológicos para conservar la biodiversidad.","D":"Reducir la cantidad de agua utilizada sin buscar alternativas sostenibles."},"respuesta":"C","retroalimentacion":"Los corredores ecológicos son franjas de vegetación natural que conectan fragmentos de ecosistemas, permitiendo el movimiento de fauna y flora. En zonas de monocultivo como la palma de aceite (baja biodiversidad), los corredores ayudan a conservar especies y restaurar funciones ecosistémicas. Las opciones A, B y D aumentarían el impacto negativo. Respuesta: C."},
+  {"id":135,"grado":11,"asignatura":"Ciencias Naturales","competencia":"ciencias naturales — cambio climático","enunciado":"Si en una región deforestada la temperatura del suelo ha aumentado, ¿qué efecto tendría esto sobre la evaporación del agua en el ecosistema?","opciones":{"A":"Se reduciría, favoreciendo la formación de humedales.","B":"No cambiaría, ya que la evaporación no depende de la temperatura del suelo.","C":"Se detendría completamente.","D":"Se incrementaría, causando sequías."},"respuesta":"D","retroalimentacion":"La evaporación es directamente proporcional a la temperatura: a mayor temperatura del suelo, mayor energía disponible para convertir agua líquida en vapor. En una región deforestada sin sombra y con suelos más calientes, la evaporación aumenta significativamente. Sin embargo, como los árboles no contribuyen a la transpiración, el resultado neto es pérdida de humedad del suelo, que puede derivar en sequías. Respuesta: D."},
+  {"id":136,"grado":11,"asignatura":"Ciencias Naturales","competencia":"ciencias naturales — cambio climático","enunciado":"El cambio climático es una consecuencia de la alteración del ciclo del carbono. ¿Cómo afecta la deforestación a este ciclo?","opciones":{"A":"Reduce la cantidad de CO₂ atmosférico porque el suelo expuesto lo absorbe.","B":"No tiene ningún efecto, ya que el carbono no depende de la vegetación.","C":"Genera oxígeno en grandes cantidades.","D":"Aumenta la concentración de CO₂ en la atmósfera porque se eliminan árboles que lo absorben."},"respuesta":"D","retroalimentacion":"Los bosques son sumideros de carbono: absorben CO₂ mediante fotosíntesis y lo almacenan en su biomasa. Al deforestar: (1) se destruyen estos sumideros, reduciendo la absorción de CO₂; (2) la madera en descomposición o quemada libera el CO₂ almacenado. El resultado es mayor concentración de CO₂ atmosférico, que intensifica el efecto invernadero y el cambio climático. Respuesta: D."},
+
+  // ══ 2025 1P — FÍSICA (MAS / Péndulo → Ciencias Naturales) ══
+  {"id":137,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento armónico simple","enunciado":"Un resorte de un sistema masa-resorte oscila de manera periódica, con una fuerza restauradora proporcional al desplazamiento desde la posición de equilibrio. ¿Cuál es la relación entre la amplitud y la energía en este tipo de movimiento?","opciones":{"A":"La energía total se mantiene constante sin importar la amplitud.","B":"A mayor amplitud, mayor es la energía total almacenada en el sistema.","C":"La energía total aumenta cuando la amplitud disminuye.","D":"La energía cinética es siempre igual a la energía potencial en todo momento."},"respuesta":"B","retroalimentacion":"En el Movimiento Armónico Simple (MAS), la energía mecánica total es E = ½kA², proporcional al cuadrado de la amplitud (A). A mayor amplitud, mayor energía total almacenada. La energía se transforma entre cinética (máxima en el centro) y potencial elástica (máxima en los extremos), pero la suma permanece constante si no hay amortiguamiento. Respuesta: B."},
+  {"id":138,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento armónico simple","enunciado":"Los sistemas de amortiguación de vehículos usan resortes para reducir vibraciones y evitar que el movimiento se repita indefinidamente tras pasar por un bache. ¿Por qué los sistemas de amortiguación no deben comportarse como un MAS ideal?","opciones":{"A":"Porque en un MAS ideal, las oscilaciones continuarían indefinidamente, haciendo que el vehículo siga moviéndose incluso después del bache.","B":"Porque en un MAS ideal, la frecuencia sería demasiado baja para que el vehículo funcione.","C":"Porque los resortes en un MAS ideal tendrían elasticidad demasiado alta, dañando el vehículo.","D":"Porque en un MAS ideal, la energía se pierde constantemente, lo cual no sería eficiente."},"respuesta":"A","retroalimentacion":"Un MAS ideal es conservativo (sin pérdida de energía), por lo que las oscilaciones continuarían indefinidamente. En un vehículo, esto significaría que seguiría vibrando sin fin tras pasar un bache, comprometiendo la comodidad y seguridad. Por eso los amortiguadores son sistemas disipativos que convierten la energía mecánica en calor, extinguiendo las oscilaciones. Respuesta: A."},
+  {"id":139,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento armónico simple","enunciado":"Un estudiante observa un péndulo y nota que el tiempo de oscilación no cambia aunque aumente la amplitud. ¿Se puede inferir que la amplitud no influye en el período de oscilación de un péndulo?","opciones":{"A":"No, porque la amplitud afecta directamente la energía del sistema.","B":"Sí, porque en un péndulo ideal, la amplitud no afecta el período de oscilación.","C":"Sí, porque el péndulo está en un entorno con mucha resistencia.","D":"No, porque el péndulo podría estar perdiendo energía por fricción."},"respuesta":"B","retroalimentacion":"Esta es la propiedad de isocronismo del péndulo: para ángulos pequeños, el período T = 2π√(L/g) depende únicamente de la longitud de la cuerda (L) y la gravedad (g), no de la amplitud. La amplitud sí afecta la energía (A es verdad en eso), pero no el período. La observación del estudiante confirma el isocronismo. Respuesta: B."},
+  {"id":140,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento armónico simple","enunciado":"En un experimento con un resorte y diferentes masas colgadas, se observa que a mayor masa, el resorte oscila con un período más largo. ¿Se puede inferir que la masa afecta el período de oscilación del sistema masa-resorte?","opciones":{"A":"Sí, porque a mayor masa, la fuerza restauradora del resorte se ve más comprometida.","B":"No, porque la masa no tiene impacto en el movimiento de oscilación.","C":"Sí, porque un mayor peso disminuye la frecuencia de oscilación.","D":"No, porque la masa no influye directamente en el tipo de oscilación."},"respuesta":"C","retroalimentacion":"En el sistema masa-resorte: T = 2π√(m/k). A mayor masa (m), mayor período y menor frecuencia (f = 1/T). El experimento confirma: más masa → oscilación más lenta → período más largo → menor frecuencia. La opción C expresa correctamente que mayor peso (masa) disminuye la frecuencia. Respuesta: C."},
+  {"id":141,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento armónico simple","enunciado":"En un vehículo con sistema de amortiguación, se observa que al aumentar la velocidad, las oscilaciones se hacen más rápidas pero el vehículo se estabiliza en poco tiempo. ¿Se puede inferir que la velocidad influye en la rapidez con que el sistema estabiliza el movimiento?","opciones":{"A":"No, porque la velocidad no tiene impacto en la amortiguación.","B":"Sí, porque una mayor velocidad hace que el sistema reaccione más rápidamente para contrarrestar las oscilaciones.","C":"Sí, porque a mayor velocidad, el vehículo requiere más tiempo para detenerse.","D":"No, porque el sistema de amortiguación es independiente de la velocidad."},"respuesta":"B","retroalimentacion":"Al aumentar la velocidad, las perturbaciones generan oscilaciones con mayor energía. El sistema de amortiguación responde más activamente para disipar esta energía rápidamente. Esto se observa como estabilización más rápida del vehículo. La opción B refleja correctamente esta inferencia. Respuesta: B."},
+  {"id":142,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento armónico simple","enunciado":"Un estudiante observa un péndulo en un ambiente con mucha fricción. Después de varias oscilaciones, el péndulo pierde energía y se detiene. ¿Se puede inferir que la fricción juega un papel crucial en la pérdida de energía?","opciones":{"A":"No, porque la fricción no afecta el movimiento de un péndulo ideal.","B":"Sí, porque la fricción aumenta la amplitud de las oscilaciones.","C":"Sí, porque la fricción disipa la energía del movimiento, reduciendo gradualmente la amplitud.","D":"No, porque la fricción no tiene impacto en el movimiento del péndulo."},"respuesta":"C","retroalimentacion":"La fricción es una fuerza disipativa que convierte la energía mecánica del péndulo en calor. La amplitud disminuye gradualmente (movimiento amortiguado) hasta que el péndulo se detiene. En un péndulo ideal (sin fricción) las oscilaciones continuarían indefinidamente. La descripción corresponde a un péndulo amortiguado. Respuesta: C."},
+  {"id":143,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento armónico simple","enunciado":"Un agricultor utiliza una cuerda para medir el tiempo de oscilación de un péndulo improvisado con una rama y una piedra. Al notar que la cuerda no cambia de longitud, decide dejar de medir el tiempo. ¿Qué entiende el agricultor sobre la longitud y el período del péndulo?","opciones":{"A":"Que no es necesario medir el tiempo ya que la cuerda no cambia.","B":"Que el material de la cuerda influye más en el movimiento que su longitud.","C":"Que la fricción del aire es la que afecta el movimiento del péndulo.","D":"Que la longitud de la cuerda es fundamental para determinar el tiempo de oscilación."},"respuesta":"D","retroalimentacion":"El agricultor razona que si la cuerda no cambia de longitud, el período tampoco cambiará: reconoce intuitivamente que la longitud determina el período. T = 2π√(L/g); si L es constante, T es constante. Dejar de medir indica que comprende la longitud como la variable clave. Respuesta: D."},
+  {"id":144,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento armónico simple","enunciado":"Un mecánico nota que un vehículo con suspensión en mal estado tiene problemas de estabilidad en caminos irregulares. ¿Qué podría argumentar el mecánico para explicar este fenómeno?","opciones":{"A":"Que un sistema de suspensión más rígido mejora la estabilidad sin importar el estado de la carretera.","B":"Que los vehículos no necesitan suspensión si se mantienen a baja velocidad.","C":"Que un sistema de suspensión dañado no puede contrarrestar adecuadamente las oscilaciones en terrenos irregulares.","D":"Que las oscilaciones del vehículo en caminos irregulares son normales y no afectan su funcionamiento."},"respuesta":"C","retroalimentacion":"Un sistema de suspensión funcional actúa como amortiguador: absorbe las oscilaciones generadas por irregularidades del terreno y las disipa como calor, manteniendo la estabilidad. Cuando está dañado, pierde su capacidad de amortiguar y las oscilaciones no se disipan eficientemente, comprometiendo la estabilidad. Respuesta: C."},
+  {"id":145,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento armónico simple","enunciado":"Un granjero instala un resorte en su maquinaria para evitar daños por vibraciones. Con el tiempo, nota que el resorte pierde su capacidad de amortiguación. ¿Cuál podría ser la razón?","opciones":{"A":"Que el resorte está demasiado tenso y necesita relajarse.","B":"Que el ambiente muy frío lo hace más rígido.","C":"Que el resorte necesita mantenimiento periódico.","D":"Que el resorte ha llegado al límite de su elasticidad, perdiendo su capacidad para devolver la energía absorbida."},"respuesta":"D","retroalimentacion":"Los resortes funcionan dentro de un rango elástico (Ley de Hooke). Si se someten a fuerzas repetidas que superan su límite elástico o sufren fatiga del material, se deforman permanentemente y pierden la capacidad de recuperar su forma original (deformación plástica). Esto les impide devolver la energía elástica almacenada. Respuesta: D."},
+  {"id":146,"grado":11,"asignatura":"Ciencias Naturales","competencia":"física — movimiento armónico simple","enunciado":"Un agricultor usa un péndulo para medir la velocidad del viento y observa que en días con más viento el péndulo oscila con más fuerza. ¿Qué puede entender el agricultor sobre la relación entre el viento y el movimiento del péndulo?","opciones":{"A":"Que el viento influye directamente en el movimiento del péndulo, aumentando la amplitud de las oscilaciones.","B":"Que la velocidad del viento no tiene ninguna relación con el movimiento del péndulo.","C":"Que el viento disminuye la energía del péndulo, haciendo que oscile menos.","D":"Que la temperatura ambiente afecta más al movimiento del péndulo que la velocidad del viento."},"respuesta":"A","retroalimentacion":"El viento ejerce una fuerza externa sobre el péndulo. A mayor velocidad del viento, mayor es la fuerza aplicada y mayor es la amplitud de las oscilaciones (el péndulo oscila con más fuerza). Esto no cambia el período (que depende de la longitud), pero sí aumenta la amplitud. El agricultor observa correctamente esta relación. Respuesta: A."},
+
+  // ══ 2025 1P — QUÍMICA (Ciencias Naturales) ══
+  {"id":147,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — compuestos orgánicos e inorgánicos","enunciado":"En un laboratorio de una empresa palmicultora se analizaron dos sustancias:\n\n• Sustancia 1: puntos de fusión y ebullición bajos, cadena larga de átomos, arde fácilmente en presencia de oxígeno, compuesta por carbono e hidrógeno.\n• Sustancia 2: puntos de fusión y ebullición altos, no forma cadenas de átomos, no arde en presencia de oxígeno, compuesta por átomos alcalinos y halógenos.\n\n¿A qué tipo de compuesto corresponde cada sustancia?","opciones":{"A":"Ambas son orgánicas.","B":"Ambas son el mismo compuesto.","C":"La sustancia 1 es orgánica y la 2 inorgánica.","D":"La sustancia 1 es inorgánica y la 2 orgánica."},"respuesta":"C","retroalimentacion":"Los compuestos orgánicos se caracterizan por: cadenas de carbono e hidrógeno, puntos de fusión/ebullición bajos y ser combustibles. La sustancia 1 cumple todo → orgánica. Los inorgánicos (como sales) tienen puntos de fusión altos, están formados por átomos alcalinos y halógenos, y no son combustibles → sustancia 2 inorgánica. Respuesta: C."},
+  {"id":148,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — solubilidad","enunciado":"Con base en las características de las dos sustancias (1: orgánica con cadena de carbono; 2: inorgánica con átomos alcalinos y halógenos), si se introduce cada sustancia en agua, ¿qué comportamiento es más probable?","opciones":{"A":"La sustancia 1 será poco soluble en agua por su naturaleza orgánica, mientras que la sustancia 2 se disolverá fácilmente por ser un compuesto iónico.","B":"La sustancia 1 se disolverá rápidamente por su estructura compleja, mientras que la sustancia 2 será insoluble.","C":"Ambas serán solubles porque contienen átomos con alta electronegatividad.","D":"Ninguna se disolverá en agua, ya que los compuestos con puntos de ebullición altos son insolubles."},"respuesta":"A","retroalimentacion":"El principio 'lo semejante disuelve a lo semejante': el agua es polar. Los compuestos orgánicos con cadenas largas de C e H son apolares → poco solubles en agua (sustancia 1). Los compuestos iónicos (alcalinos + halógenos, como sales) se disocian en iones en agua → muy solubles (sustancia 2). Respuesta: A."},
+  {"id":149,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — fórmulas moleculares","enunciado":"Los tipos de fórmulas para representar compuestos son:\n• Empírica: relación proporcional de átomos.\n• Molecular: cantidad exacta de átomos en la molécula.\n• Estructural: posición relativa de los átomos.\n• Lewis: electrones de valencia.\n\n¿Cuál de las siguientes representaciones ejemplifica la fórmula molecular del etano?","opciones":{"A":"La estructura de Lewis con puntos que representan electrones compartidos.","B":"La estructura desarrollada H—C—C—H con todos sus hidrógenos.","C":"C₂H₆","D":"CH₃"},"respuesta":"C","retroalimentacion":"La fórmula molecular del etano es C₂H₆: indica que cada molécula tiene exactamente 2 átomos de carbono y 6 de hidrógeno. La fórmula empírica es CH₃ (relación proporcional). La fórmula estructural es H—C—C—H con todos los hidrógenos. La de Lewis muestra los electrones de valencia. Respuesta: C."},
+  {"id":150,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — alótropos del carbono","enunciado":"Un grupo de investigadores analizó tres muestras de carbono (A, B y C) bajo el microscopio. Observaron que una de las muestras formaba capas planas en forma de anillos hexagonales superpuestas. ¿Qué conclusión pueden obtener?","opciones":{"A":"Los cristales amorfos están conformados por celdas unitarias repetitivas.","B":"Bajo el microscopio los grafitos presentan una apariencia amorfa.","C":"Los grafitos forman capas planas en forma de anillos hexagonales.","D":"Los diamantes están conformados por capas sobrepuestas de anillos."},"respuesta":"C","retroalimentacion":"La estructura del grafito consiste en capas planas de átomos de carbono ordenados en red hexagonal (panal de abejas), unidas por fuerzas de Van der Waals débiles. La observación microscópica de capas planas hexagonales identifica inequívocamente al grafito. El diamante tiene estructura tetraédrica tridimensional; el carbono amorfo no tiene estructura ordenada. Respuesta: C."},
+  {"id":151,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — alótropos del carbono","enunciado":"Al analizar la dureza de tres muestras de carbono se obtuvo:\n\n• Muestra A: ¿Es rayada con hierro? → Sí\n• Muestra B: ¿Es rayada con hierro? → Sí\n• Muestra C: ¿Es rayada con hierro? → No\n\n¿Cuál de las tres muestras corresponde al diamante?","opciones":{"A":"La muestra A","B":"La muestra B","C":"La muestra C","D":"La información no permite identificar el diamante"},"respuesta":"C","retroalimentacion":"El diamante es el mineral natural más duro (10 en la escala de Mohs). El hierro tiene dureza ~4-5. Por tanto, el hierro NO puede rayar al diamante. Las muestras A y B son rayadas por el hierro → son más blandas (grafito o carbono amorfo). La muestra C no es rayada por el hierro → es el diamante. Respuesta: C."},
+  {"id":152,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — alótropos del carbono","enunciado":"Un grupo de investigadores tiene tres muestras de carbono sin marcar (grafito, diamante y carbono amorfo). ¿Qué propiedad les permitiría identificar correctamente cada muestra?","opciones":{"A":"Analizar la conductividad eléctrica: el grafito conduce electricidad, mientras que el diamante y el carbono amorfo son aislantes.","B":"Someter las muestras a altas temperaturas: el diamante tiene el punto de fusión más bajo.","C":"Pruebas de reactividad con ácidos: el grafito reacciona violentamente, mientras los otros son inertes.","D":"Medir la maleabilidad: el carbono amorfo es altamente maleable, mientras grafito y diamante no lo son."},"respuesta":"A","retroalimentacion":"La conductividad eléctrica distingue estas formas del carbono: el grafito conduce electricidad (los electrones π deslocalizados entre las capas hexagonales se mueven libremente), mientras el diamante es aislante (todos los electrones están en enlaces sigma). El carbono amorfo es generalmente aislante. Las opciones B, C y D son incorrectas: el diamante tiene el punto de fusión MÁS ALTO; el grafito no reacciona violentamente con ácidos; el carbono amorfo no es maleable. Respuesta: A."},
+  {"id":153,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — isomería","enunciado":"Observa la siguiente información:\n\n• Butano: CH₃–CH₂–CH₂–CH₃ | Punto de ebullición: 272,7 K\n• 2-metilpropano: CH₃–CH(CH₃)–CH₃ | Punto de ebullición: 261,5 K\n\nAmbos compuestos tienen la misma fórmula molecular (C₄H₁₀) pero diferente estructura. ¿Qué fenómeno representa esta comparación?","opciones":{"A":"Fusión","B":"Reactividad","C":"Grupo funcional","D":"Isomería"},"respuesta":"D","retroalimentacion":"La isomería es el fenómeno en que dos o más compuestos tienen la misma fórmula molecular pero diferente estructura o disposición de los átomos, con distintas propiedades físicas y/o químicas. El butano (cadena lineal) y el 2-metilpropano (cadena ramificada) tienen la misma fórmula C₄H₁₀ pero diferente estructura y diferentes puntos de ebullición. Son isómeros estructurales. Respuesta: D."},
+  {"id":154,"grado":11,"asignatura":"Ciencias Naturales","competencia":"química — isomería","enunciado":"¿Qué consecuencias tiene alterar la fórmula estructural de una sustancia, como en el caso del butano y el 2-metilpropano?","opciones":{"A":"Que las propiedades fisicoquímicas cambien.","B":"Que la fórmula molecular cambie.","C":"Que la composición elemental cambie.","D":"Que cambie la apariencia física solamente."},"respuesta":"A","retroalimentacion":"Cuando se altera la fórmula estructural manteniendo la misma fórmula molecular, se obtiene un isómero. Los isómeros tienen la misma composición elemental y fórmula molecular, pero diferente estructura, lo que resulta en diferentes propiedades fisicoquímicas (puntos de fusión, ebullición, solubilidad, reactividad). En el ejemplo, butano y 2-metilpropano (C₄H₁₀) tienen diferentes puntos de ebullición. La fórmula molecular (B) y la composición (C) NO cambian en isómeros. Respuesta: A."}
+];
+
+function cargarBancoInicial() {
+  BANCO = [...PREGUNTAS_INICIALES];
+  actualizarResumenBanco();
+}
+
+// ═══════════ TABS ═══════════
+function mostrarTab(t) {
+  ['inicio','historial','cargar'].forEach(id => {
+    document.getElementById('tab-'+id).classList.toggle('oculto', id !== t);
+    document.getElementById('ntab-'+id).classList.toggle('activo', id === t);
+  });
+  if (t === 'historial') renderHistorial();
+  if (t === 'cargar') actualizarResumenBanco();
+}
+
+function mostrarConfig() {
+  ['pant-quiz','pant-resultado'].forEach(id => document.getElementById(id).classList.add('oculto'));
+  document.getElementById('pant-config').classList.remove('oculto');
+  mostrarTab('inicio');
+  cargarStatsRapidas();
+}
+
+// ═══════════ INICIO ═══════════
+function iniciar() {
+  const nombre = document.getElementById('inp-nombre').value.trim();
+  if (!nombre) { alert('Por favor escribe tu nombre.'); document.getElementById('inp-nombre').focus(); return; }
+  if (!BANCO.length) { alert('No hay preguntas cargadas. Ve a la pestaña "Preguntas" y sube el archivo preguntas.json.'); return; }
+
+  const grado = document.getElementById('sel-grado').value;
+  const asig  = document.getElementById('sel-asig').value;
+  let cant    = parseInt(document.getElementById('sel-cant').value);
+  const tpp   = parseInt(document.getElementById('sel-tiempo').value);
+
+  let pool = BANCO.filter(p => (!grado || p.grado == grado) && (!asig || p.asignatura === asig));
+  if (!pool.length) { alert('No hay preguntas para los filtros elegidos. Prueba con otra combinación.'); return; }
+
+  pool = pool.sort(() => Math.random() - .5);
+  if (cant > 0) pool = pool.slice(0, Math.min(cant, pool.length));
+
+  SES = { nombre, preguntas: pool, respuestas: {}, idx: 0,
+          inicio: Date.now(), tpp, timerInt: null, tRestante: tpp, tTotal: 0 };
+
+  document.getElementById('pant-config').classList.add('oculto');
+  document.getElementById('pant-resultado').classList.add('oculto');
+  document.getElementById('pant-quiz').classList.remove('oculto');
+  renderPregunta();
+}
+
+// ═══════════ QUIZ ═══════════
+function renderPregunta() {
+  const p = SES.preguntas[SES.idx];
+  const tot = SES.preguntas.length;
+
+  document.getElementById('q-asig').textContent  = p.asignatura;
+  document.getElementById('q-grado').textContent = 'Grado ' + p.grado + '°';
+  document.getElementById('q-comp').textContent  = p.competencia || '—';
+  document.getElementById('q-proglbl').textContent = `Pregunta ${SES.idx+1} de ${tot}`;
+  const pct = Math.round((SES.idx/tot)*100);
+  document.getElementById('q-progpct').textContent = pct + '%';
+  document.getElementById('q-progfill').style.width = pct + '%';
+  document.getElementById('q-enunciado').textContent = p.enunciado;
+  document.getElementById('q-retro').classList.remove('show');
+
+  const cont = document.getElementById('q-opciones');
+  cont.innerHTML = '';
+  ['A','B','C','D'].forEach(l => {
+    const d = document.createElement('div');
+    d.className = 'opcion'; d.id = 'op-'+l;
+    d.onclick = () => seleccionar(l);
+    d.innerHTML = `<span class="letra">${l}</span><span>${p.opciones[l]}</span>`;
+    cont.appendChild(d);
+  });
+
+  if (SES.respuestas[p.id] !== undefined) {
+    aplicarResultado(p, SES.respuestas[p.id]);
+    document.getElementById('btn-verificar').classList.add('oculto');
+    document.getElementById('btn-siguiente').classList.remove('oculto');
+  } else {
+    SES.opcion = null;
+    document.getElementById('btn-verificar').classList.remove('oculto');
+    document.getElementById('btn-siguiente').classList.add('oculto');
+    iniciarTimer();
+  }
+}
+
+function seleccionar(l) {
+  const p = SES.preguntas[SES.idx];
+  if (SES.respuestas[p.id] !== undefined) return;
+  document.querySelectorAll('.opcion').forEach(el => el.classList.remove('sel'));
+  document.getElementById('op-'+l).classList.add('sel');
+  SES.opcion = l;
+}
+
+function verificar() {
+  if (!SES.opcion) { alert('Selecciona una opción primero.'); return; }
+  const p = SES.preguntas[SES.idx];
+  detenerTimer();
+  SES.respuestas[p.id] = SES.opcion;
+  aplicarResultado(p, SES.opcion);
+  document.getElementById('btn-verificar').classList.add('oculto');
+  document.getElementById('btn-siguiente').classList.remove('oculto');
+}
+
+function aplicarResultado(p, elegida) {
+  ['A','B','C','D'].forEach(l => {
+    const el = document.getElementById('op-'+l);
+    if (!el) return;
+    el.classList.remove('sel','ok','mal');
+    el.style.pointerEvents = 'none';
+    if (l === p.respuesta) el.classList.add('ok');
+    else if (l === elegida) el.classList.add('mal');
+  });
+  document.getElementById('q-retrotxt').textContent = p.retroalimentacion;
+  document.getElementById('q-retro').classList.add('show');
+}
+
+function siguiente() {
+  if (SES.idx < SES.preguntas.length - 1) { SES.idx++; renderPregunta(); }
+  else mostrarResultado();
+}
+
+// ═══════════ TIMER ═══════════
+function iniciarTimer() {
+  detenerTimer();
+  if (!SES.tpp) { document.getElementById('q-timer').textContent = ''; return; }
+  SES.tRestante = SES.tpp;
+  updateTimer();
+  SES.timerInt = setInterval(() => {
+    SES.tRestante--;
+    updateTimer();
+    if (SES.tRestante <= 0) {
+      detenerTimer();
+      const p = SES.preguntas[SES.idx];
+      SES.respuestas[p.id] = '__tiempo__';
+      SES.opcion = null;
+      aplicarResultado(p, null);
+      document.getElementById('btn-verificar').classList.add('oculto');
+      document.getElementById('btn-siguiente').classList.remove('oculto');
+    }
+  }, 1000);
+}
+function detenerTimer() { clearInterval(SES.timerInt); SES.timerInt = null; }
+function updateTimer() {
+  const s = SES.tRestante, m = Math.floor(s/60), ss = (s%60).toString().padStart(2,'0');
+  const el = document.getElementById('q-timer');
+  el.textContent = `⏱ ${m}:${ss}`;
+  el.classList.toggle('urgente', s <= 15);
+}
+
+// ═══════════ RESULTADO ═══════════
+function mostrarResultado() {
+  detenerTimer();
+  SES.tTotal = Math.round((Date.now()-SES.inicio)/1000);
+
+  const tot = SES.preguntas.length;
+  let ok = 0;
+  const niveles = {};
+
+  SES.preguntas.forEach(p => {
+    const resp = SES.respuestas[p.id];
+    const bien = resp === p.respuesta;
+    if (bien) ok++;
+    const niv = p.competencia || 'general';
+    if (!niveles[niv]) niveles[niv] = {ok:0, tot:0};
+    niveles[niv].tot++;
+    if (bien) niveles[niv].ok++;
+  });
+
+  const pct = Math.round((ok/tot)*100);
+  const emojis = pct>=80?'🏆':pct>=60?'👍':pct>=40?'💪':'📚';
+  const msgs   = pct>=80?'¡Excelente! Sigues triunfando':pct>=60?'¡Buen trabajo, sigue adelante!':pct>=40?'¡Bien! Practica más para mejorar':'¡No te rindas! Vuelve a intentarlo';
+
+  document.getElementById('r-emoji').textContent = emojis;
+  document.getElementById('r-pct').textContent   = pct + '%';
+  document.getElementById('r-msg').textContent   = msgs;
+  document.getElementById('r-quien').textContent = SES.nombre;
+  document.getElementById('r-ok').textContent    = ok;
+  document.getElementById('r-mal').textContent   = tot - ok;
+  const m = Math.floor(SES.tTotal/60), ss = (SES.tTotal%60).toString().padStart(2,'0');
+  document.getElementById('r-t').textContent = `${m}:${ss}`;
+
+  // Barras por nivel
+  const colores = ['#1a3a8f','#f5a623','#c0392b','#1a7a3c','#8e44ad','#2980b9'];
+  const nDiv = document.getElementById('r-niveles');
+  nDiv.innerHTML = '';
+  Object.entries(niveles).forEach(([n,d],i) => {
+    const p2 = Math.round((d.ok/d.tot)*100);
+    nDiv.innerHTML += `<div class="nivel-row">
+      <div class="nivel-nombre">${cap(n)}</div>
+      <div class="nivel-track"><div class="nivel-fill" style="width:${p2}%;background:${colores[i%colores.length]}"></div></div>
+      <div class="nivel-pct">${p2}%</div>
+    </div>`;
+  });
+
+  // Revisión
+  const rv = document.getElementById('r-revision');
+  rv.innerHTML = '<h3 style="margin-bottom:12px;font-size:.95rem">Detalle de respuestas:</h3>';
+  SES.preguntas.forEach((p,i) => {
+    const resp = SES.respuestas[p.id];
+    const bien = resp === p.respuesta;
+    const ico = bien ? '✅' : resp==='__tiempo__' ? '⏰' : '❌';
+    const d = document.createElement('div');
+    d.className = 'revision-item';
+    d.innerHTML = `
+      <div class="revision-hdr" onclick="toggleItem(this)">
+        <span>${ico} P${i+1} · ${p.asignatura} · Grado ${p.grado}°</span><span>▼</span>
+      </div>
+      <div class="revision-body">
+        <p style="margin-bottom:8px">${p.enunciado.substring(0,220)}${p.enunciado.length>220?'…':''}</p>
+        <p class="resp-ok">✔ Correcta: ${p.respuesta}. ${p.opciones[p.respuesta]}</p>
+        ${resp && resp!=='__tiempo__' && !bien ? `<p class="resp-mal">✘ Tu respuesta: ${resp}. ${p.opciones[resp]}</p>` : ''}
+        ${resp==='__tiempo__' ? '<p class="resp-mal">⏰ Se agotó el tiempo</p>' : ''}
+        <p style="margin-top:8px;color:#444;font-size:.85rem"><strong>💡</strong> ${p.retroalimentacion}</p>
+      </div>`;
+    rv.appendChild(d);
+  });
+
+  guardarHistorial({ nombre:SES.nombre, fecha:new Date().toLocaleString('es-CO'),
+    pct, ok, tot, tTotal:SES.tTotal,
+    grado: SES.preguntas[0]?.grado||'—', asig: SES.preguntas[0]?.asignatura||'Mixto' });
+
+  document.getElementById('pant-quiz').classList.add('oculto');
+  document.getElementById('r-revision').classList.add('oculto');
+  document.getElementById('pant-resultado').classList.remove('oculto');
+}
+
+function toggleRevision() { document.getElementById('r-revision').classList.toggle('oculto'); }
+function toggleItem(h) {
+  h.nextElementSibling.classList.toggle('open');
+  h.lastElementChild.textContent = h.nextElementSibling.classList.contains('open') ? '▲' : '▼';
+}
+
+// ═══════════ HISTORIAL ═══════════
+function getHist() { try { return JSON.parse(localStorage.getItem('yopuedo_hist')||'[]'); } catch { return []; } }
+function guardarHistorial(e) {
+  const h = getHist(); h.unshift(e);
+  if (h.length>120) h.length=120;
+  localStorage.setItem('yopuedo_hist', JSON.stringify(h));
+}
+function borrarHistorial() { localStorage.removeItem('yopuedo_hist'); renderHistorial(); cargarStatsRapidas(); }
+
+function renderHistorial() {
+  const h = getHist(), cont = document.getElementById('hist-contenido');
+  if (!h.length) {
+    cont.innerHTML = '<div class="empty-state"><div class="ei">📭</div><p>Aún no tienes simulacros completados.</p></div>';
+    return;
+  }
+  const mejor = Math.max(...h.map(x=>x.pct));
+  cont.innerHTML = `<p style="margin-bottom:12px;font-size:.87rem;color:#666">
+    <strong>${h.length}</strong> simulacro(s) · Mejor puntaje: <strong>${mejor}%</strong></p>
+    <div style="overflow-x:auto">
+    <table class="tabla-hist">
+      <thead><tr><th>Fecha</th><th>Nombre</th><th>Grado</th><th>Área</th><th>Puntaje</th><th>Resultado</th><th>Tiempo</th></tr></thead>
+      <tbody>${h.map(e=>{
+        const m=Math.floor(e.tTotal/60),s=(e.tTotal%60).toString().padStart(2,'0');
+        const c=e.pct>=80?'#1a7a3c':e.pct>=60?'#1a3a8f':e.pct>=40?'#d4881a':'#c0392b';
+        return `<tr>
+          <td style="white-space:nowrap;font-size:.8rem">${e.fecha}</td>
+          <td>${e.nombre}</td><td>${e.grado}°</td><td>${e.asig}</td>
+          <td style="font-weight:bold;color:${c}">${e.pct}%</td>
+          <td>${e.ok}/${e.tot}</td><td>${m}:${s}</td></tr>`;
+      }).join('')}</tbody></table></div>`;
+}
+
+function cargarStatsRapidas() {
+  const h = getHist(), card = document.getElementById('card-stats');
+  if (!h.length) { card.style.display='none'; return; }
+  card.style.display='block';
+  const ul = h.slice(0,5);
+  const prom = Math.round(ul.reduce((a,x)=>a+x.pct,0)/ul.length);
+  const mejor = Math.max(...h.map(x=>x.pct));
+  document.getElementById('stats-contenido').innerHTML = `
+    <div class="stat-mini"><div class="num">${h.length}</div><div class="lbl">Simulacros</div></div>
+    <div class="stat-mini"><div class="num">${mejor}%</div><div class="lbl">Mejor puntaje</div></div>
+    <div class="stat-mini"><div class="num">${prom}%</div><div class="lbl">Promedio</div></div>`;
+  document.getElementById('ultimo-intento').textContent =
+    `Último: ${h[0].fecha} · ${h[0].pct}% en ${h[0].asig} (${h[0].nombre})`;
+}
+
+// ═══════════ CARGAR JSON ═══════════
+function cargarJSON(inp) {
+  const file = inp.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (!Array.isArray(d)) throw new Error('Formato incorrecto.');
+      BANCO = d;
+      document.getElementById('carga-msg').innerHTML =
+        `<span style="color:var(--verde)">✅ <strong>${BANCO.length}</strong> preguntas cargadas correctamente.</span>`;
+      actualizarResumenBanco();
+    } catch(err) {
+      document.getElementById('carga-msg').innerHTML =
+        `<span style="color:var(--rojo)">❌ Error: ${err.message}</span>`;
+    }
+  };
+  r.readAsText(file);
+}
+
+function actualizarResumenBanco() {
+  const cont = document.getElementById('banco-resumen'); if (!cont) return;
+  if (!BANCO.length) {
+    cont.innerHTML = '<div class="empty-state"><div class="ei">📭</div><p>No hay preguntas cargadas.</p></div>';
+    return;
+  }
+  const porG = {}, porA = {};
+  BANCO.forEach(p => {
+    porG[p.grado] = (porG[p.grado]||0)+1;
+    porA[p.asignatura] = (porA[p.asignatura]||0)+1;
+  });
+  cont.innerHTML = `<p style="margin-bottom:14px;font-size:.9rem">
+    Total: <strong>${BANCO.length}</strong> preguntas disponibles</p>
+    <div class="resumen-grid">
+      <div class="resumen-bloque">
+        <h4>Por grado</h4>
+        ${Object.entries(porG).sort((a,b)=>a[0]-b[0]).map(([g,n])=>
+          `<div class="resumen-fila"><span>Grado ${g}°</span><strong>${n}</strong></div>`).join('')}
+      </div>
+      <div class="resumen-bloque">
+        <h4>Por asignatura</h4>
+        ${Object.entries(porA).map(([a,n])=>
+          `<div class="resumen-fila"><span>${a}</span><strong>${n}</strong></div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function cap(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+</script>
+</body>
+</html>
